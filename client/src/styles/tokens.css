@@ -218,6 +218,25 @@
   background: var(--bg-surface);
 }
 
+/* Accessibility panel styling */
+[data-theme="light"] .accessibility-btn {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+[data-theme="light"] .accessibility-btn:hover {
+  background: #E5E7EB;
+}
+
+[data-theme="dark"] .accessibility-btn {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .accessibility-btn:hover {
+  background: var(--bg-primary);
+}
+
 /* Offline button styling */
 [data-theme="light"] .offline-btn-saved {
   background: #DCFCE7;
