@@ -2,6 +2,9 @@
 
 A full-stack blogging platform built with MongoDB, Express.js, React, and Node.js for VIBE HACK 2025.
 
+## 📋 For GitHub Users
+**👉 See [GITHUB-SETUP.md](GITHUB-SETUP.md) for complete setup instructions**
+
 ## 🚀 Quick Start
 
 ### Prerequisites
