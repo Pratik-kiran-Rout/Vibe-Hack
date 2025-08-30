@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import NotificationCenter from './NotificationCenter';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -27,24 +26,6 @@ const Header: React.FC = () => {
             <Link to="/blogs" className="text-white hover:text-blue-200 transition-colors">
               Blogs
             </Link>
-            <Link to="/forums" className="text-white hover:text-blue-200 transition-colors">
-              Forums
-            </Link>
-            <Link to="/challenges" className="text-white hover:text-blue-200 transition-colors">
-              Challenges
-            </Link>
-            <Link to="/podcasts" className="text-white hover:text-blue-200 transition-colors">
-              Podcasts
-            </Link>
-            <Link to="/newsletter" className="text-white hover:text-blue-200 transition-colors">
-              Newsletter
-            </Link>
-            <Link to="/jobs" className="text-white hover:text-blue-200 transition-colors">
-              Jobs
-            </Link>
-            <Link to="/premium" className="text-yellow-300 hover:text-yellow-200 transition-colors font-medium">
-              💸 Premium
-            </Link>
             <Link to="/contact" className="text-white hover:text-blue-200 transition-colors">
               Contact
             </Link>
@@ -53,16 +34,7 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <Link to="/reading-list" className="text-white hover:text-blue-200 transition-colors">
-                  📖 Reading List
-                </Link>
-                <Link to="/reading-history" className="text-white hover:text-blue-200 transition-colors">
-                  📚 History
-                </Link>
-                <Link to="/peer-review" className="text-white hover:text-blue-200 transition-colors">
-                  🔍 Peer Review
-                </Link>
-                <NotificationCenter />
+
                 <Link to="/create" className="btn-primary">
                   Write Blog
                 </Link>
