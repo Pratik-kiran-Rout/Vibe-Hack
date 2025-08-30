@@ -6,6 +6,7 @@ import FollowButton from '../components/FollowButton';
 import ReadingListButton from '../components/ReadingListButton';
 import RelatedPosts from '../components/RelatedPosts';
 import ReportButton from '../components/ReportButton';
+import LiveComments from '../components/LiveComments';
 import { useAuth } from '../context/AuthContext';
 import { updateMetaTags, generateStructuredData } from '../utils/seo';
 
@@ -237,6 +238,9 @@ const BlogPost: React.FC = () => {
             </div>
           </div>
         </article>
+
+        {/* Live Comments */}
+        <LiveComments blogId={blog._id} initialComments={blog.comments} />
 
         {/* Related Posts */}
         <div className="mt-12">

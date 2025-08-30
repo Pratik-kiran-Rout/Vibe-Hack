@@ -2,6 +2,8 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Blog = require('../models/Blog');
 const { auth } = require('../middleware/auth');
+const { blogLimiter, commentLimiter } = require('../middleware/rateLimiter');
+const { moderateContent } = require('../utils/contentModeration');
 
 const router = express.Router();
 
@@ -86,7 +88,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create blog
-router.post('/', auth, [
+router.post('/', auth, blogLimiter, [
   body('title').isLength({ min: 5, max: 200 }).trim().escape(),
   body('content').optional().isLength({ min: 1 }),
   body('excerpt').optional().isLength({ min: 10, max: 300 }).trim().escape(),
@@ -105,10 +107,17 @@ router.post('/', auth, [
     const wordCount = content ? content.split(' ').length : 0;
     const readTime = Math.ceil(wordCount / 200) || 1;
 
-    // Determine status based on draft flag
+    // Content moderation
     let status = 'draft';
     if (!isDraft && content && excerpt) {
-      status = 'pending'; // Submit for approval
+      const moderation = moderateContent(content + ' ' + title + ' ' + excerpt);
+      if (moderation.action === 'reject') {
+        return res.status(400).json({ 
+          message: 'Content flagged by automated moderation. Please review and resubmit.',
+          flags: moderation.flags 
+        });
+      }
+      status = moderation.action === 'review' ? 'pending' : 'approved';
     }
 
     const blog = new Blog({
@@ -209,7 +218,7 @@ router.post('/:id/like', auth, async (req, res) => {
 });
 
 // Add comment
-router.post('/:id/comment', auth, [
+router.post('/:id/comment', auth, commentLimiter, [
   body('text').isLength({ min: 1, max: 500 }).trim().escape()
 ], async (req, res) => {
   try {

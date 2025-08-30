@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { SocketProvider } from './context/SocketContext';
 import Header from './components/Header';
 import ParticleBackground from './components/ParticleBackground';
 import Home from './pages/Home';
@@ -23,10 +24,11 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="App">
-          <ParticleBackground />
-          <Header />
+      <SocketProvider>
+        <Router>
+          <div className="App">
+            <ParticleBackground />
+            <Header />
           <main>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -70,8 +72,9 @@ function App() {
               } />
             </Routes>
           </main>
-        </div>
-      </Router>
+          </div>
+        </Router>
+      </SocketProvider>
     </AuthProvider>
   );
 }

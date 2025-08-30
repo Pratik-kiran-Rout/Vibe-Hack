@@ -1,7 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
+const socketIo = require('socket.io');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 require('dotenv').config();
+
+const { apiLimiter, authLimiter } = require('./middleware/rateLimiter');
+const { handleConnection } = require('./socket/socketHandler');
+const { scheduleBackups } = require('./utils/backup');
 
 const authRoutes = require('./routes/auth');
 const blogRoutes = require('./routes/blogs');
@@ -14,11 +23,23 @@ const adminToolsRoutes = require('./routes/adminTools');
 const { generateSitemap } = require('./utils/sitemap');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST']
+  }
+});
 
-// Middleware
+// Security and performance middleware
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(compression());
+app.use(morgan('combined'));
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static('uploads'));
+app.use('/api/', apiLimiter);
+app.use('/api/auth/', authLimiter);
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -50,9 +71,17 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
 
+// Initialize real-time features
+handleConnection(io);
+
+// Initialize backup system
+scheduleBackups();
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log('Real-time features enabled');
+  console.log('Backup system initialized');
 }).on('error', (err) => {
   console.error('Server startup error:', err);
 });

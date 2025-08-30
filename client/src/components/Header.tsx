@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationCenter from './NotificationCenter';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -49,6 +50,7 @@ const Header: React.FC = () => {
                 <Link to="/reading-history" className="text-white hover:text-blue-200 transition-colors">
                   📚 History
                 </Link>
+                <NotificationCenter />
                 <Link to="/create" className="btn-primary">
                   Write Blog
                 </Link>
