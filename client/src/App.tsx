@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import ParticleBackground from './components/ParticleBackground';
 import Home from './pages/Home';
 import Blogs from './pages/Blogs';
@@ -84,6 +85,7 @@ function App() {
               <Route path="/premium" element={<PremiumPlans />} />
             </Routes>
           </main>
+          <Footer />
           </div>
         </Router>
       </SocketProvider>

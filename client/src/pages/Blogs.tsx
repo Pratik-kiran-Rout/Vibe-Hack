@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import AdvancedSearch, { SearchFilters } from '../components/AdvancedSearch';
-import PopularTags from '../components/PopularTags';
-import AuthorRecommendations from '../components/AuthorRecommendations';
 
 interface Blog {
   _id: string;
@@ -18,41 +15,50 @@ interface Blog {
   likes: any[];
   readTime: number;
   tags: string[];
-  category: string;
 }
 
 const Blogs: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [currentFilters, setCurrentFilters] = useState<SearchFilters>({
-    search: '',
-    category: '',
-    author: '',
-    dateFrom: '',
-    dateTo: '',
-    tags: '',
-    sortBy: 'createdAt',
-    sortOrder: 'desc'
-  });
 
-
+  const handleLike = async (blogId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please login to like blogs');
+        return;
+      }
+      
+      const response = await axios.post(`/api/blogs/${blogId}/like`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Update like count locally without refetching
+      setBlogs(prevBlogs => 
+        prevBlogs.map(blog => 
+          blog._id === blogId 
+            ? { ...blog, likes: Array(response.data.likes).fill(null) }
+            : blog
+        )
+      );
+    } catch (error) {
+      console.error('Error liking blog:', error);
+    }
+  };
 
   useEffect(() => {
     fetchBlogs();
-  }, [currentPage, currentFilters]);
+  }, [currentPage, search]);
 
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: '6',
-        ...currentFilters
-      });
-      
-      const response = await axios.get(`/api/search/blogs?${params}`);
+      const response = await axios.get(`/api/blogs?page=${currentPage}&search=${search}&limit=9`);
       setBlogs(response.data.blogs);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -62,15 +68,10 @@ const Blogs: React.FC = () => {
     }
   };
 
-  const handleSearch = (filters: SearchFilters) => {
-    setCurrentFilters(filters);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
     setCurrentPage(1);
-  };
-
-  const handleTagClick = (tag: string) => {
-    const newFilters = { ...currentFilters, tags: tag };
-    setCurrentFilters(newFilters);
-    setCurrentPage(1);
+    fetchBlogs();
   };
 
   if (loading && currentPage === 1) {
@@ -89,42 +90,41 @@ const Blogs: React.FC = () => {
           <p className="text-white/80 text-lg">Discover amazing stories and insights from our community</p>
         </div>
 
-        {/* Advanced Search */}
-        <div className="max-w-6xl mx-auto mb-12">
-          <AdvancedSearch onSearch={handleSearch} loading={loading} />
+        {/* Search */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <form onSubmit={handleSearch} className="flex gap-4">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search blogs..."
+              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <button type="submit" className="btn-primary px-8">
+              Search
+            </button>
+          </form>
         </div>
 
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-4 gap-8 mb-12">
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            <PopularTags onTagClick={handleTagClick} />
-            <AuthorRecommendations />
-          </div>
-
-          {/* Blogs Grid */}
-          <div className="lg:col-span-3 grid md:grid-cols-2 gap-8">
+        {/* Blogs Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {blogs.map((blog) => (
-            <div key={blog._id} className="card hover:transform hover:scale-105 transition-all duration-300">
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">
-                <Link to={`/post/${blog._id}`} className="hover:text-purple-600">
-                  {blog.title}
-                </Link>
+            <Link key={blog._id} to={`/post/${blog._id}`} className="card hover:transform hover:scale-105 transition-all duration-300 cursor-pointer">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 hover:text-purple-600">
+                {blog.title}
               </h3>
               <p className="text-gray-600 mb-4 line-clamp-3">{blog.excerpt}</p>
               
-              {/* Category and Tags */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">
-                  {blog.category}
-                </span>
-                {blog.tags && blog.tags.length > 0 && (
-                  blog.tags.slice(0, 2).map((tag, index) => (
+              {/* Tags */}
+              {blog.tags && blog.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {blog.tags.slice(0, 3).map((tag, index) => (
                     <span key={index} className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">
                       {tag}
                     </span>
-                  ))
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
 
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>By {blog.author.username}</span>
@@ -134,10 +134,15 @@ const Blogs: React.FC = () => {
                 <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
                 <div className="flex items-center gap-4">
                   <span>👁 {blog.views}</span>
-                  <span>❤️ {blog.likes.length}</span>
+                  <button 
+                    onClick={(e) => handleLike(blog._id, e)}
+                    className="flex items-center gap-1 hover:text-red-500 transition-colors"
+                  >
+                    ❤️ {blog.likes.length}
+                  </button>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -165,11 +170,10 @@ const Blogs: React.FC = () => {
         )}
 
         {blogs.length === 0 && !loading && (
-          <div className="lg:col-span-3 text-center py-12">
+          <div className="text-center py-12">
             <p className="text-white text-lg">No blogs found. Try a different search term.</p>
           </div>
         )}
-        </div>
       </div>
     </div>
   );
