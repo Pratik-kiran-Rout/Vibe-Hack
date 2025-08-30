@@ -52,7 +52,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         disabled={loading}
         className={`px-4 py-2 rounded-md font-medium transition-colors disabled:opacity-50 ${
           following
-            ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            ? 'follow-btn-following'
             : 'bg-purple-600 text-white hover:bg-purple-700'
         }`}
       >
@@ -60,7 +60,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       </button>
       
       {followersCount > 0 && (
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-muted">
           {followersCount} follower{followersCount !== 1 ? 's' : ''}
         </span>
       )}

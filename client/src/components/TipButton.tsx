@@ -52,14 +52,14 @@ const TipButton: React.FC<TipButtonProps> = ({ blogId, authorName }) => {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          <div className="rounded-lg p-6 w-full max-w-md mx-4" style={{background: 'var(--bg-card)'}}>
+            <h3 className="text-lg font-semibold mb-4 text-primary">
               💰 Tip {authorName}
             </h3>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium mb-2 text-secondary">
                   Amount ($)
                 </label>
                 <div className="grid grid-cols-5 gap-2 mb-3">
@@ -70,7 +70,7 @@ const TipButton: React.FC<TipButtonProps> = ({ blogId, authorName }) => {
                       className={`py-2 px-3 rounded border text-sm font-medium ${
                         amount === preAmount
                           ? 'bg-yellow-500 text-white border-yellow-500'
-                          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                          : 'tip-amount-btn'
                       }`}
                     >
                       ${preAmount}
@@ -102,8 +102,8 @@ const TipButton: React.FC<TipButtonProps> = ({ blogId, authorName }) => {
                 <p className="text-xs text-gray-500 mt-1">{message.length}/200</p>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-yellow-800 text-sm">
+              <div className="border rounded-lg p-3 tip-info-box">
+                <div className="flex items-center gap-2 text-sm">
                   <span>ℹ️</span>
                   <span>Tips help support content creators and encourage quality writing.</span>
                 </div>

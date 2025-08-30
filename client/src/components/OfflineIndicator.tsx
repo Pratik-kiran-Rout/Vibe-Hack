@@ -61,8 +61,8 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
       disabled={loading}
       className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-colors ${
         isSaved 
-          ? 'bg-green-100 text-green-700 hover:bg-green-200' 
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          ? 'offline-btn-saved' 
+          : 'offline-btn-unsaved'
       }`}
       title={isSaved ? 'Remove from offline reading' : 'Save for offline reading'}
     >

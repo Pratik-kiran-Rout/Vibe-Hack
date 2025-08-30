@@ -68,10 +68,9 @@
 
 /* Theme-appropriate gradient text */
 [data-theme="light"] .gradient-text {
-  background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
+  color: #000000 !important;
+  background: none !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 [data-theme="dark"] .gradient-text {
@@ -129,4 +128,150 @@
 
 [data-theme="dark"] .social-login-btn:hover {
   background: #1F2937 !important;
+}
+
+/* ReactQuill dark mode styling */
+[data-theme="dark"] .ql-toolbar {
+  background: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-stroke {
+  stroke: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-fill {
+  fill: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-picker-label {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .ql-container {
+  background: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .ql-editor {
+  color: var(--text-primary) !important;
+}
+
+/* Follow button styling */
+[data-theme="light"] .follow-btn-following {
+  background: #E5E7EB !important;
+  color: #374151 !important;
+}
+
+[data-theme="light"] .follow-btn-following:hover {
+  background: #D1D5DB !important;
+}
+
+[data-theme="dark"] .follow-btn-following {
+  background: #7C3AED !important;
+  color: white !important;
+}
+
+[data-theme="dark"] .follow-btn-following:hover {
+  background: #6D28D9 !important;
+}
+
+/* Tip modal styling */
+[data-theme="light"] .tip-amount-btn {
+  background: white;
+  color: #374151;
+  border-color: #D1D5DB;
+}
+
+[data-theme="light"] .tip-amount-btn:hover {
+  background: #F9FAFB;
+}
+
+[data-theme="dark"] .tip-amount-btn {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .tip-amount-btn:hover {
+  background: var(--bg-primary);
+}
+
+[data-theme="light"] .tip-info-box {
+  background: #FEF3C7;
+  border-color: #FCD34D;
+  color: #92400E;
+}
+
+[data-theme="dark"] .tip-info-box {
+  background: var(--bg-surface);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .tip-cancel-btn:hover {
+  background: #F9FAFB;
+}
+
+[data-theme="dark"] .tip-cancel-btn:hover {
+  background: var(--bg-surface);
+}
+
+/* Offline button styling */
+[data-theme="light"] .offline-btn-saved {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+[data-theme="light"] .offline-btn-saved:hover {
+  background: #BBF7D0;
+}
+
+[data-theme="light"] .offline-btn-unsaved {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+[data-theme="light"] .offline-btn-unsaved:hover {
+  background: #E5E7EB;
+}
+
+[data-theme="dark"] .offline-btn-saved {
+  background: #166534;
+  color: #BBF7D0;
+}
+
+[data-theme="dark"] .offline-btn-saved:hover {
+  background: #15803D;
+}
+
+[data-theme="dark"] .offline-btn-unsaved {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .offline-btn-unsaved:hover {
+  background: var(--bg-primary);
+}
+
+/* Navbar text styling for light mode */
+[data-theme="light"] nav a,
+[data-theme="light"] nav button,
+[data-theme="light"] nav .gradient-text {
+  color: #000000 !important;
+}
+
+[data-theme="light"] nav a:hover,
+[data-theme="light"] nav button:hover {
+  color: #374151 !important;
+}
+
+/* Theme toggle button styling */
+[data-theme="light"] .theme-toggle {
+  color: #000000 !important;
+}
+
+[data-theme="light"] .theme-toggle:hover {
+  color: #374151 !important;
 }
