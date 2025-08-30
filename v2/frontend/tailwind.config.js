@@ -7,13 +7,6 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-<<<<<<< HEAD
-          50: '#eff6ff',
-          100: '#dbeafe',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-=======
           50: '#faf5ff',
           100: '#f3e8ff',
           200: '#e9d5ff',
@@ -36,7 +29,6 @@ module.exports = {
           700: '#374151',
           800: '#1f2937',
           900: '#111827',
->>>>>>> affeb88f4bbfdbed658101c827d382fed99e5aa7
         }
       },
       fontFamily: {
