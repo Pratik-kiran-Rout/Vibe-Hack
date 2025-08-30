@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAuth } from '../context/AuthContext';
 import { Heart, MessageCircle, Eye, Calendar, User } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -136,9 +139,29 @@ const BlogDetail = () => {
         </header>
 
         <div className="prose max-w-none mb-8">
-          <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+          <ReactMarkdown
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || '');
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={tomorrow}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              }
+            }}
+          >
             {blog.content}
-          </div>
+          </ReactMarkdown>
         </div>
 
         {blog.tags && blog.tags.length > 0 && (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import MarkdownEditor from '../components/MarkdownEditor';
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -71,14 +72,10 @@ const CreateBlog = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Content
             </label>
-            <textarea
-              name="content"
+            <MarkdownEditor
               value={formData.content}
-              onChange={handleChange}
-              required
-              rows="15"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              placeholder="Write your blog content here..."
+              onChange={(value) => setFormData({ ...formData, content: value })}
+              placeholder="Write your blog content here... Markdown is supported!"
             />
           </div>
 

@@ -2,6 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Blog = require('../models/Blog');
 const Comment = require('../models/Comment');
+const User = require('../models/User');
 const { auth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -35,36 +36,86 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get trending blogs
+// Get trending blogs with enhanced algorithm
 router.get('/trending', async (req, res) => {
   try {
     const blogs = await Blog.find({ status: 'approved' })
       .populate('author', 'name email')
-      .populate('commentsCount')
-      .sort({ views: -1, likesCount: -1 })
-      .limit(10);
+      .populate('commentsCount');
 
-    res.json(blogs);
+    // Calculate trending score for each blog
+    const blogsWithScore = blogs.map(blog => {
+      const ageInHours = (Date.now() - new Date(blog.createdAt)) / (1000 * 60 * 60);
+      const likesCount = blog.likes ? blog.likes.length : 0;
+      const commentsCount = blog.commentsCount || 0;
+      const views = blog.views || 0;
+      
+      // Trending score = (likes * 2 + comments * 3 + views) / age_in_hours
+      const trendingScore = ageInHours > 0 ? (likesCount * 2 + commentsCount * 3 + views) / ageInHours : 0;
+      
+      return {
+        ...blog.toObject(),
+        trendingScore,
+        likesCount
+      };
+    });
+
+    // Sort by trending score and limit to 10
+    const trendingBlogs = blogsWithScore
+      .sort((a, b) => b.trendingScore - a.trendingScore)
+      .slice(0, 10);
+
+    res.json(trendingBlogs);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Search blogs
+// Advanced search with filters
 router.get('/search', async (req, res) => {
   try {
-    const { q } = req.query;
-    const blogs = await Blog.find({
-      status: 'approved',
-      $or: [
+    const { q, tag, author, sortBy = 'date', order = 'desc' } = req.query;
+    
+    let query = { status: 'approved' };
+    
+    // Text search
+    if (q) {
+      query.$or = [
         { title: { $regex: q, $options: 'i' } },
         { content: { $regex: q, $options: 'i' } },
         { tags: { $in: [new RegExp(q, 'i')] } }
-      ]
-    })
-    .populate('author', 'name email')
-    .populate('commentsCount')
-    .sort({ createdAt: -1 });
+      ];
+    }
+    
+    // Tag filter
+    if (tag) {
+      query.tags = { $in: [new RegExp(tag, 'i')] };
+    }
+    
+    // Author filter
+    if (author) {
+      const authorUser = await User.findOne({ name: { $regex: author, $options: 'i' } });
+      if (authorUser) {
+        query.author = authorUser._id;
+      }
+    }
+    
+    let sortOptions = {};
+    switch (sortBy) {
+      case 'popularity':
+        sortOptions = { views: order === 'desc' ? -1 : 1 };
+        break;
+      case 'likes':
+        sortOptions = { 'likes.length': order === 'desc' ? -1 : 1 };
+        break;
+      default:
+        sortOptions = { createdAt: order === 'desc' ? -1 : 1 };
+    }
+    
+    const blogs = await Blog.find(query)
+      .populate('author', 'name email')
+      .populate('commentsCount')
+      .sort(sortOptions);
 
     res.json(blogs);
   } catch (error) {
