@@ -48,9 +48,9 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ blogId, title, url, shares,
       <button
         onClick={() => handleShare('twitter')}
         className="p-2 text-blue-500 hover:bg-blue-50 rounded-full transition-colors"
-        title="Share on Twitter"
+        title="Share on X"
       >
-        🐦
+        ❌
       </button>
       
       <button
