@@ -27,6 +27,12 @@ const Header: React.FC = () => {
             <Link to="/blogs" className="text-white hover:text-blue-200 transition-colors">
               Blogs
             </Link>
+            <Link to="/forums" className="text-white hover:text-blue-200 transition-colors">
+              Forums
+            </Link>
+            <Link to="/challenges" className="text-white hover:text-blue-200 transition-colors">
+              Challenges
+            </Link>
             <Link to="/podcasts" className="text-white hover:text-blue-200 transition-colors">
               Podcasts
             </Link>
@@ -35,6 +41,9 @@ const Header: React.FC = () => {
             </Link>
             <Link to="/jobs" className="text-white hover:text-blue-200 transition-colors">
               Jobs
+            </Link>
+            <Link to="/premium" className="text-yellow-300 hover:text-yellow-200 transition-colors font-medium">
+              💸 Premium
             </Link>
             <Link to="/contact" className="text-white hover:text-blue-200 transition-colors">
               Contact
@@ -49,6 +58,9 @@ const Header: React.FC = () => {
                 </Link>
                 <Link to="/reading-history" className="text-white hover:text-blue-200 transition-colors">
                   📚 History
+                </Link>
+                <Link to="/peer-review" className="text-white hover:text-blue-200 transition-colors">
+                  🔍 Peer Review
                 </Link>
                 <NotificationCenter />
                 <Link to="/create" className="btn-primary">

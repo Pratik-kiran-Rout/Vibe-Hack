@@ -7,6 +7,7 @@ import ReadingListButton from '../components/ReadingListButton';
 import RelatedPosts from '../components/RelatedPosts';
 import ReportButton from '../components/ReportButton';
 import LiveComments from '../components/LiveComments';
+import TipButton from '../components/TipButton';
 import { useAuth } from '../context/AuthContext';
 import { updateMetaTags, generateStructuredData } from '../utils/seo';
 
@@ -206,13 +207,16 @@ const BlogPost: React.FC = () => {
 
           {/* Social Actions */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <ShareButtons 
-              blogId={blog._id}
-              title={blog.title}
-              url={window.location.href}
-              shares={blog.shares || 0}
-              onShare={(newCount) => setBlog(prev => prev ? {...prev, shares: newCount} : null)}
-            />
+            <div className="flex items-center justify-between mb-4">
+              <ShareButtons 
+                blogId={blog._id}
+                title={blog.title}
+                url={window.location.href}
+                shares={blog.shares || 0}
+                onShare={(newCount) => setBlog(prev => prev ? {...prev, shares: newCount} : null)}
+              />
+              <TipButton blogId={blog._id} authorName={blog.author.username} />
+            </div>
           </div>
 
           {/* Author Info */}

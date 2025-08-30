@@ -18,6 +18,10 @@ import CreateBlog from './pages/CreateBlog';
 import AdminDashboard from './pages/AdminDashboard';
 import ReadingList from './pages/ReadingList';
 import ReadingHistory from './pages/ReadingHistory';
+import Forums from './pages/Forums';
+import WritingChallenges from './pages/WritingChallenges';
+import PeerReview from './pages/PeerReview';
+import PremiumPlans from './pages/PremiumPlans';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -70,6 +74,14 @@ function App() {
                   <AdminDashboard />
                 </ProtectedRoute>
               } />
+              <Route path="/forums" element={<Forums />} />
+              <Route path="/challenges" element={<WritingChallenges />} />
+              <Route path="/peer-review" element={
+                <ProtectedRoute>
+                  <PeerReview />
+                </ProtectedRoute>
+              } />
+              <Route path="/premium" element={<PremiumPlans />} />
             </Routes>
           </main>
           </div>

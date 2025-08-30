@@ -58,6 +58,36 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  subscription: {
+    plan: {
+      type: String,
+      enum: ['free', 'premium', 'pro'],
+      default: 'free'
+    },
+    startDate: Date,
+    endDate: Date,
+    stripeCustomerId: String,
+    stripeSubscriptionId: String
+  },
+  customDomain: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  earnings: {
+    totalTips: {
+      type: Number,
+      default: 0
+    },
+    sponsoredPosts: {
+      type: Number,
+      default: 0
+    },
+    withdrawable: {
+      type: Number,
+      default: 0
+    }
+  },
   readingHistory: [{
     blog: {
       type: mongoose.Schema.Types.ObjectId,

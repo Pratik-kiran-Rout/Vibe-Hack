@@ -92,6 +92,35 @@ const blogSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
+  isSponsored: {
+    type: Boolean,
+    default: false
+  },
+  sponsorInfo: {
+    company: String,
+    logoUrl: String,
+    websiteUrl: String,
+    amount: Number
+  },
+  tips: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    amount: {
+      type: Number,
+      required: true
+    },
+    message: String,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   scheduledAt: {
     type: Date,
     default: null

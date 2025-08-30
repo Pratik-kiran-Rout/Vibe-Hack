@@ -20,6 +20,8 @@ const socialRoutes = require('./routes/social');
 const searchRoutes = require('./routes/search');
 const analyticsRoutes = require('./routes/analytics');
 const adminToolsRoutes = require('./routes/adminTools');
+const communityRoutes = require('./routes/community');
+const monetizationRoutes = require('./routes/monetization');
 const { generateSitemap } = require('./utils/sitemap');
 
 const app = express();
@@ -50,6 +52,8 @@ app.use('/api/social', socialRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin-tools', adminToolsRoutes);
+app.use('/api/community', communityRoutes);
+app.use('/api/monetization', monetizationRoutes);
 
 // Sitemap route
 app.get('/sitemap.xml', async (req, res) => {

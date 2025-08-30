@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
+import EarningsDashboard from '../components/EarningsDashboard';
 
 interface Blog {
   _id: string;
@@ -20,7 +21,7 @@ const Profile: React.FC = () => {
   const { user } = useAuth();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [drafts, setDrafts] = useState<Blog[]>([]);
-  const [activeTab, setActiveTab] = useState<'published' | 'drafts' | 'analytics'>('published');
+  const [activeTab, setActiveTab] = useState<'published' | 'drafts' | 'analytics' | 'earnings'>('published');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -150,6 +151,16 @@ const Profile: React.FC = () => {
               >
                 📊 Analytics
               </button>
+              <button
+                onClick={() => setActiveTab('earnings')}
+                className={`px-4 py-2 rounded-md font-medium ${
+                  activeTab === 'earnings'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                💰 Earnings
+              </button>
             </div>
             <Link to="/create" className="btn-primary">
               + New Blog
@@ -244,6 +255,8 @@ const Profile: React.FC = () => {
             )
           ) : activeTab === 'analytics' ? (
             <AnalyticsDashboard />
+          ) : activeTab === 'earnings' ? (
+            <EarningsDashboard />
           ) : null}
         </div>
       </div>

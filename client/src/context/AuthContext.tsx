@@ -8,6 +8,11 @@ interface User {
   role: string;
   bio?: string;
   avatar?: string;
+  subscription?: {
+    plan: string;
+    startDate?: string;
+    endDate?: string;
+  };
 }
 
 interface AuthContextType {
