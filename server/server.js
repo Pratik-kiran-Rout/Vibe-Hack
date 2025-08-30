@@ -23,6 +23,7 @@ const adminToolsRoutes = require('./routes/adminTools');
 const communityRoutes = require('./routes/community');
 const monetizationRoutes = require('./routes/monetization');
 const healthRoutes = require('./routes/health');
+const setupRoutes = require('./routes/setup');
 const { generateSitemap } = require('./utils/sitemap');
 
 const app = express();
@@ -60,6 +61,7 @@ app.use('/api/admin-tools', adminToolsRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/monetization', monetizationRoutes);
 app.use('/api', healthRoutes);
+app.use('/api/setup', setupRoutes);
 
 // Root route
 app.get('/', (req, res) => {
