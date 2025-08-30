@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AdminAnalytics from '../components/AdminAnalytics';
 
 interface Blog {
   _id: string;
@@ -29,6 +30,7 @@ const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('pending');
+  const [activeTab, setActiveTab] = useState<'blogs' | 'analytics'>('blogs');
 
   useEffect(() => {
     fetchData();
@@ -81,33 +83,59 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="min-h-screen py-8 px-6">
       <div className="container mx-auto max-w-7xl">
-        <h1 className="text-3xl font-bold text-white mb-8">Admin Dashboard</h1>
-
-        {/* Stats */}
-        {stats && (
-          <div className="grid md:grid-cols-5 gap-6 mb-8">
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.totalBlogs}</div>
-              <div className="text-gray-600">Total Blogs</div>
-            </div>
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-yellow-600">{stats.pendingBlogs}</div>
-              <div className="text-gray-600">Pending</div>
-            </div>
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.approvedBlogs}</div>
-              <div className="text-gray-600">Approved</div>
-            </div>
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.rejectedBlogs}</div>
-              <div className="text-gray-600">Rejected</div>
-            </div>
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.totalUsers}</div>
-              <div className="text-gray-600">Total Users</div>
-            </div>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+          <div className="flex gap-4">
+            <button
+              onClick={() => setActiveTab('blogs')}
+              className={`px-4 py-2 rounded-md font-medium ${
+                activeTab === 'blogs'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              Blog Management
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-4 py-2 rounded-md font-medium ${
+                activeTab === 'analytics'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              📊 Analytics
+            </button>
           </div>
-        )}
+        </div>
+
+        {activeTab === 'blogs' ? (
+          <>
+            {/* Stats */}
+            {stats && (
+              <div className="grid md:grid-cols-5 gap-6 mb-8">
+                <div className="card text-center">
+                  <div className="text-2xl font-bold text-blue-600">{stats.totalBlogs}</div>
+                  <div className="text-gray-600">Total Blogs</div>
+                </div>
+                <div className="card text-center">
+                  <div className="text-2xl font-bold text-yellow-600">{stats.pendingBlogs}</div>
+                  <div className="text-gray-600">Pending</div>
+                </div>
+                <div className="card text-center">
+                  <div className="text-2xl font-bold text-green-600">{stats.approvedBlogs}</div>
+                  <div className="text-gray-600">Approved</div>
+                </div>
+                <div className="card text-center">
+                  <div className="text-2xl font-bold text-red-600">{stats.rejectedBlogs}</div>
+                  <div className="text-gray-600">Rejected</div>
+                </div>
+                <div className="card text-center">
+                  <div className="text-2xl font-bold text-purple-600">{stats.totalUsers}</div>
+                  <div className="text-gray-600">Total Users</div>
+                </div>
+              </div>
+            )}
 
         {/* Filter Tabs */}
         <div className="card mb-8">
@@ -201,6 +229,10 @@ const AdminDashboard: React.FC = () => {
             )}
           </div>
         </div>
+          </>
+        ) : (
+          <AdminAnalytics />
+        )}
       </div>
     </div>
   );

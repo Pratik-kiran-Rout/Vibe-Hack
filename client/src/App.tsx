@@ -16,6 +16,7 @@ import Profile from './pages/Profile';
 import CreateBlog from './pages/CreateBlog';
 import AdminDashboard from './pages/AdminDashboard';
 import ReadingList from './pages/ReadingList';
+import ReadingHistory from './pages/ReadingHistory';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -45,6 +46,11 @@ function App() {
               <Route path="/reading-list" element={
                 <ProtectedRoute>
                   <ReadingList />
+                </ProtectedRoute>
+              } />
+              <Route path="/reading-history" element={
+                <ProtectedRoute>
+                  <ReadingHistory />
                 </ProtectedRoute>
               } />
               <Route path="/create" element={

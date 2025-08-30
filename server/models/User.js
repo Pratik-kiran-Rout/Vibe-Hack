@@ -57,7 +57,21 @@ const userSchema = new mongoose.Schema({
   newsletterSubscription: {
     type: Boolean,
     default: false
-  }
+  },
+  readingHistory: [{
+    blog: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    },
+    readAt: {
+      type: Date,
+      default: Date.now
+    },
+    readTime: {
+      type: Number,
+      default: 0
+    }
+  }]
 }, {
   timestamps: true
 });

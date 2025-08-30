@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { updateMetaTags, generateStructuredData } from '../utils/seo';
 
 interface Blog {
   _id: string;
@@ -23,6 +24,19 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // SEO optimization for home page
+    updateMetaTags({
+      title: 'DevNote - Developer Blogging Platform',
+      description: 'Discover amazing stories, insights, and knowledge from our community of developers. Share your thoughts and connect with like-minded individuals.',
+      keywords: 'developer blog, programming, technology, coding, software development',
+      url: window.location.href
+    });
+    
+    generateStructuredData({
+      type: 'WebSite',
+      url: window.location.origin
+    });
+
     const fetchBlogs = async () => {
       try {
         const [latestResponse, trendingResponse] = await Promise.all([

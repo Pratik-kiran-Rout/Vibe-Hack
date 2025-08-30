@@ -4,6 +4,9 @@ import axios from 'axios';
 import ShareButtons from '../components/ShareButtons';
 import FollowButton from '../components/FollowButton';
 import ReadingListButton from '../components/ReadingListButton';
+import RelatedPosts from '../components/RelatedPosts';
+import { useAuth } from '../context/AuthContext';
+import { updateMetaTags, generateStructuredData } from '../utils/seo';
 
 interface Blog {
   _id: string;
@@ -31,10 +34,12 @@ interface Blog {
 
 const BlogPost: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [seriesBlogs, setSeriesBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [readStartTime, setReadStartTime] = useState<number>(Date.now());
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -47,6 +52,29 @@ const BlogPost: React.FC = () => {
           const seriesResponse = await axios.get(`/api/social/series/${encodeURIComponent(response.data.series.name)}`);
           setSeriesBlogs(seriesResponse.data);
         }
+        
+        setReadStartTime(Date.now());
+        
+        // Update SEO meta tags
+        updateMetaTags({
+          title: response.data.title,
+          description: response.data.excerpt,
+          author: response.data.author.username,
+          url: window.location.href,
+          image: response.data.featuredImage,
+          keywords: response.data.tags.join(', ')
+        });
+        
+        // Generate structured data
+        generateStructuredData({
+          type: 'Article',
+          title: response.data.title,
+          description: response.data.excerpt,
+          author: response.data.author.username,
+          datePublished: response.data.createdAt,
+          url: window.location.href,
+          image: response.data.featuredImage
+        });
       } catch (error: any) {
         setError(error.response?.data?.message || 'Blog not found');
       } finally {
@@ -58,6 +86,28 @@ const BlogPost: React.FC = () => {
       fetchBlog();
     }
   }, [id]);
+
+  // Track reading history when component unmounts
+  useEffect(() => {
+    return () => {
+      if (blog && readStartTime) {
+        const readTime = Math.floor((Date.now() - readStartTime) / 1000);
+        if (readTime > 10) { // Only track if read for more than 10 seconds
+          // Track reading history for logged-in users
+          if (user) {
+            axios.post(`/api/search/reading-history/${blog._id}`, { readTime })
+              .catch(error => console.error('Failed to track reading history:', error));
+          }
+          
+          // Track analytics for all users
+          axios.post(`/api/analytics/track-view/${blog._id}`, {
+            referrer: document.referrer,
+            readTime
+          }).catch(error => console.error('Failed to track analytics:', error));
+        }
+      }
+    };
+  }, [user, blog, readStartTime]);
 
   if (loading) {
     return (
@@ -185,6 +235,11 @@ const BlogPost: React.FC = () => {
             </div>
           </div>
         </article>
+
+        {/* Related Posts */}
+        <div className="mt-12">
+          <RelatedPosts blogId={blog._id} />
+        </div>
       </div>
     </div>
   );

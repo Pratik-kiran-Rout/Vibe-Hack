@@ -8,6 +8,9 @@ const blogRoutes = require('./routes/blogs');
 const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/upload');
 const socialRoutes = require('./routes/social');
+const searchRoutes = require('./routes/search');
+const analyticsRoutes = require('./routes/analytics');
+const { generateSitemap } = require('./utils/sitemap');
 
 const app = express();
 
@@ -22,6 +25,23 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/social', socialRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/analytics', analyticsRoutes);
+
+// Sitemap route
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const sitemap = await generateSitemap();
+    if (sitemap) {
+      res.set('Content-Type', 'text/xml');
+      res.send(sitemap);
+    } else {
+      res.status(500).send('Error generating sitemap');
+    }
+  } catch (error) {
+    res.status(500).send('Error generating sitemap');
+  }
+});
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)

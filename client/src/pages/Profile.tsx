@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import AnalyticsDashboard from '../components/AnalyticsDashboard';
 
 interface Blog {
   _id: string;
@@ -19,7 +20,7 @@ const Profile: React.FC = () => {
   const { user } = useAuth();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [drafts, setDrafts] = useState<Blog[]>([]);
-  const [activeTab, setActiveTab] = useState<'published' | 'drafts'>('published');
+  const [activeTab, setActiveTab] = useState<'published' | 'drafts' | 'analytics'>('published');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -139,6 +140,16 @@ const Profile: React.FC = () => {
               >
                 Drafts ({drafts.length})
               </button>
+              <button
+                onClick={() => setActiveTab('analytics')}
+                className={`px-4 py-2 rounded-md font-medium ${
+                  activeTab === 'analytics'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                📊 Analytics
+              </button>
             </div>
             <Link to="/create" className="btn-primary">
               + New Blog
@@ -190,7 +201,7 @@ const Profile: React.FC = () => {
                 ))}
               </div>
             )
-          ) : (
+          ) : activeTab === 'drafts' ? (
             drafts.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">📝</div>
@@ -231,7 +242,9 @@ const Profile: React.FC = () => {
                 ))}
               </div>
             )
-          )}
+          ) : activeTab === 'analytics' ? (
+            <AnalyticsDashboard />
+          ) : null}
         </div>
       </div>
     </div>

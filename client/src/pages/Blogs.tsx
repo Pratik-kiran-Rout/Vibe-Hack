@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import AdvancedSearch, { SearchFilters } from '../components/AdvancedSearch';
+import PopularTags from '../components/PopularTags';
+import AuthorRecommendations from '../components/AuthorRecommendations';
 
 interface Blog {
   _id: string;
@@ -21,33 +24,35 @@ interface Blog {
 const Blogs: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [currentFilters, setCurrentFilters] = useState<SearchFilters>({
+    search: '',
+    category: '',
+    author: '',
+    dateFrom: '',
+    dateTo: '',
+    tags: '',
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
+  });
 
-  const categories = [
-    'All', 'Technology', 'Programming', 'Web Development', 'Mobile Development',
-    'Data Science', 'AI/ML', 'DevOps', 'Design', 'Career', 'Tutorial',
-    'News', 'Opinion', 'Other'
-  ];
+
 
   useEffect(() => {
     fetchBlogs();
-  }, [currentPage, search, category]);
+  }, [currentPage, currentFilters]);
 
   const fetchBlogs = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        search,
-        limit: '9'
+        limit: '6',
+        ...currentFilters
       });
-      if (category && category !== 'All') {
-        params.append('category', category);
-      }
-      const response = await axios.get(`/api/blogs?${params}`);
+      
+      const response = await axios.get(`/api/search/blogs?${params}`);
       setBlogs(response.data.blogs);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -57,10 +62,15 @@ const Blogs: React.FC = () => {
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = (filters: SearchFilters) => {
+    setCurrentFilters(filters);
     setCurrentPage(1);
-    fetchBlogs();
+  };
+
+  const handleTagClick = (tag: string) => {
+    const newFilters = { ...currentFilters, tags: tag };
+    setCurrentFilters(newFilters);
+    setCurrentPage(1);
   };
 
   if (loading && currentPage === 1) {
@@ -79,35 +89,20 @@ const Blogs: React.FC = () => {
           <p className="text-white/80 text-lg">Discover amazing stories and insights from our community</p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <form onSubmit={handleSearch} className="flex flex-col gap-4">
-            <div className="flex gap-4">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search blogs..."
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                {categories.map(cat => (
-                  <option key={cat} value={cat === 'All' ? '' : cat}>{cat}</option>
-                ))}
-              </select>
-              <button type="submit" className="btn-primary px-8">
-                Search
-              </button>
-            </div>
-          </form>
+        {/* Advanced Search */}
+        <div className="max-w-6xl mx-auto mb-12">
+          <AdvancedSearch onSearch={handleSearch} loading={loading} />
         </div>
 
-        {/* Blogs Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-4 gap-8 mb-12">
+          {/* Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            <PopularTags onTagClick={handleTagClick} />
+            <AuthorRecommendations />
+          </div>
+
+          {/* Blogs Grid */}
+          <div className="lg:col-span-3 grid md:grid-cols-2 gap-8">
           {blogs.map((blog) => (
             <div key={blog._id} className="card hover:transform hover:scale-105 transition-all duration-300">
               <h3 className="text-xl font-semibold mb-3 text-gray-800">
@@ -170,10 +165,11 @@ const Blogs: React.FC = () => {
         )}
 
         {blogs.length === 0 && !loading && (
-          <div className="text-center py-12">
+          <div className="lg:col-span-3 text-center py-12">
             <p className="text-white text-lg">No blogs found. Try a different search term.</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

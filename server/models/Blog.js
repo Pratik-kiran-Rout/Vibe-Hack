@@ -91,6 +91,18 @@ const blogSchema = new mongoose.Schema({
   shares: {
     type: Number,
     default: 0
+  },
+  analytics: {
+    dailyViews: [{
+      date: { type: Date, default: Date.now },
+      views: { type: Number, default: 0 }
+    }],
+    referrers: [{
+      source: String,
+      count: { type: Number, default: 0 }
+    }],
+    avgReadTime: { type: Number, default: 0 },
+    bounceRate: { type: Number, default: 0 }
   }
 }, {
   timestamps: true
