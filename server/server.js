@@ -22,6 +22,7 @@ const analyticsRoutes = require('./routes/analytics');
 const adminToolsRoutes = require('./routes/adminTools');
 const communityRoutes = require('./routes/community');
 const monetizationRoutes = require('./routes/monetization');
+const healthRoutes = require('./routes/health');
 const { generateSitemap } = require('./utils/sitemap');
 
 const app = express();
@@ -54,6 +55,21 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin-tools', adminToolsRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/monetization', monetizationRoutes);
+app.use('/api', healthRoutes);
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'DevNote API Server is running!',
+    version: '2.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      blogs: '/api/blogs',
+      health: '/api/health',
+      test: '/api/test'
+    }
+  });
+});
 
 // Sitemap route
 app.get('/sitemap.xml', async (req, res) => {
