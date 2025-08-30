@@ -23,13 +23,14 @@ npm run dev           # Start both frontend and backend
 npm run server        # Start backend only
 npm run client        # Start frontend only
 npm run install-all   # Install all dependencies
+npm run seed-admin    # Create admin user
 npm run build         # Build frontend for production
 ```
 
 ## 📋 Prerequisites
 
 - Node.js (v16 or higher)
-- MongoDB (running on localhost:27017)
+- MongoDB Atlas account (already configured)
 - npm or yarn
 
 ## 🎯 Features
@@ -45,9 +46,13 @@ npm run build         # Build frontend for production
 
 ## 🔧 Environment Setup
 
-1. **Backend**: Copy `.env.example` to `.env` in `/backend` folder
-2. **Database**: Ensure MongoDB is running locally
+1. **Database**: MongoDB Atlas is pre-configured
+2. **Admin User**: Run `npm run seed-admin` to create admin account
 3. **Dependencies**: Run `npm run install-all`
+
+### 👤 Default Admin Account
+- **Email**: admin@devnote.com
+- **Password**: admin123456
 
 ## 📱 Usage
 
