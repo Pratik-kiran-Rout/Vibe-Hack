@@ -92,6 +92,30 @@ const blogSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  scheduledAt: {
+    type: Date,
+    default: null
+  },
+  reports: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    reason: {
+      type: String,
+      required: true,
+      enum: ['spam', 'inappropriate', 'harassment', 'copyright', 'other']
+    },
+    description: {
+      type: String,
+      maxlength: 500
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   analytics: {
     dailyViews: [{
       date: { type: Date, default: Date.now },

@@ -5,6 +5,7 @@ import ShareButtons from '../components/ShareButtons';
 import FollowButton from '../components/FollowButton';
 import ReadingListButton from '../components/ReadingListButton';
 import RelatedPosts from '../components/RelatedPosts';
+import ReportButton from '../components/ReportButton';
 import { useAuth } from '../context/AuthContext';
 import { updateMetaTags, generateStructuredData } from '../utils/seo';
 
@@ -155,6 +156,7 @@ const BlogPost: React.FC = () => {
                 <span>❤️ {blog.likes.length}</span>
                 <span>💬 {blog.comments.length}</span>
                 <ReadingListButton blogId={blog._id} />
+                <ReportButton blogId={blog._id} />
               </div>
             </div>
 

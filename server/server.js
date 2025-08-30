@@ -10,6 +10,7 @@ const uploadRoutes = require('./routes/upload');
 const socialRoutes = require('./routes/social');
 const searchRoutes = require('./routes/search');
 const analyticsRoutes = require('./routes/analytics');
+const adminToolsRoutes = require('./routes/adminTools');
 const { generateSitemap } = require('./utils/sitemap');
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/social', socialRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/admin-tools', adminToolsRoutes);
 
 // Sitemap route
 app.get('/sitemap.xml', async (req, res) => {

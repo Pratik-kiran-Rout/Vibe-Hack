@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminAnalytics from '../components/AdminAnalytics';
+import UserManagement from '../components/UserManagement';
+import ContentReports from '../components/ContentReports';
+import BulkActions from '../components/BulkActions';
 
 interface Blog {
   _id: string;
@@ -30,7 +33,8 @@ const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('pending');
-  const [activeTab, setActiveTab] = useState<'blogs' | 'analytics'>('blogs');
+  const [activeTab, setActiveTab] = useState<'blogs' | 'analytics' | 'users' | 'reports'>('blogs');
+  const [selectedBlogs, setSelectedBlogs] = useState<string[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -106,6 +110,26 @@ const AdminDashboard: React.FC = () => {
             >
               📊 Analytics
             </button>
+            <button
+              onClick={() => setActiveTab('users')}
+              className={`px-4 py-2 rounded-md font-medium ${
+                activeTab === 'users'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              👥 Users
+            </button>
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`px-4 py-2 rounded-md font-medium ${
+                activeTab === 'reports'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              🚨 Reports
+            </button>
           </div>
         </div>
 
@@ -139,20 +163,40 @@ const AdminDashboard: React.FC = () => {
 
         {/* Filter Tabs */}
         <div className="card mb-8">
-          <div className="flex gap-4 mb-6">
-            {['draft', 'pending', 'approved', 'rejected', 'hidden'].map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilter(status)}
-                className={`px-4 py-2 rounded-md font-medium ${
-                  filter === status
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </button>
-            ))}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex gap-4">
+              {['draft', 'pending', 'approved', 'rejected', 'hidden'].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setFilter(status)}
+                  className={`px-4 py-2 rounded-md font-medium ${
+                    filter === status
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </button>
+              ))}
+            </div>
+            
+            {blogs.length > 0 && (
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedBlogs.length === blogs.length}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedBlogs(blogs.map(blog => blog._id));
+                    } else {
+                      setSelectedBlogs([]);
+                    }
+                  }}
+                  className="rounded"
+                />
+                <span className="text-sm text-gray-600">Select All</span>
+              </label>
+            )}
           </div>
 
           {/* Blogs List */}
@@ -165,7 +209,20 @@ const AdminDashboard: React.FC = () => {
               blogs.map((blog) => (
                 <div key={blog._id} className="border border-gray-200 rounded-lg p-6">
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
+                    <div className="flex items-start gap-4 flex-1">
+                      <input
+                        type="checkbox"
+                        checked={selectedBlogs.includes(blog._id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedBlogs(prev => [...prev, blog._id]);
+                          } else {
+                            setSelectedBlogs(prev => prev.filter(id => id !== blog._id));
+                          }
+                        }}
+                        className="rounded mt-1"
+                      />
+                      <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">
                         {blog.title}
                       </h3>
@@ -181,6 +238,7 @@ const AdminDashboard: React.FC = () => {
                         <span>📅 {new Date(blog.createdAt).toLocaleDateString()}</span>
                         <span>👁 {blog.views} views</span>
                         <span>❤️ {blog.likes.length} likes</span>
+                      </div>
                       </div>
                     </div>
                     <div className="flex gap-2 ml-4">
@@ -228,11 +286,26 @@ const AdminDashboard: React.FC = () => {
               ))
             )}
           </div>
+          
+          {/* Bulk Actions for Blogs */}
+          <BulkActions
+            selectedItems={selectedBlogs}
+            type="blogs"
+            onActionComplete={() => {
+              fetchData();
+              setSelectedBlogs([]);
+            }}
+            onClearSelection={() => setSelectedBlogs([])}
+          />
         </div>
           </>
-        ) : (
+        ) : activeTab === 'analytics' ? (
           <AdminAnalytics />
-        )}
+        ) : activeTab === 'users' ? (
+          <UserManagement />
+        ) : activeTab === 'reports' ? (
+          <ContentReports />
+        ) : null}
       </div>
     </div>
   );
