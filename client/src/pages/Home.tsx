@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { updateMetaTags, generateStructuredData } from '../utils/seo';
 
 interface Blog {
@@ -40,8 +40,8 @@ const Home: React.FC = () => {
     const fetchBlogs = async () => {
       try {
         const [latestResponse, trendingResponse] = await Promise.all([
-          axios.get('/api/blogs?limit=6'),
-          axios.get('/api/blogs/trending')
+          api.get('/api/blogs?limit=6'),
+          api.get('/api/blogs/trending')
         ]);
         
         setLatestBlogs(latestResponse.data.blogs);
