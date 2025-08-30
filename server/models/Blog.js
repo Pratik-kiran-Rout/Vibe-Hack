@@ -53,6 +53,10 @@ const blogSchema = new mongoose.Schema({
       required: true,
       maxlength: 500
     },
+    mentions: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
     createdAt: {
       type: Date,
       default: Date.now
@@ -73,6 +77,20 @@ const blogSchema = new mongoose.Schema({
   readTime: {
     type: Number,
     default: 5
+  },
+  series: {
+    name: {
+      type: String,
+      default: ''
+    },
+    part: {
+      type: Number,
+      default: 0
+    }
+  },
+  shares: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true
@@ -89,6 +107,16 @@ blogSchema.virtual('likeCount').get(function() {
 // Virtual for comment count
 blogSchema.virtual('commentCount').get(function() {
   return this.comments.length;
+});
+
+// Virtual for series blogs
+blogSchema.virtual('seriesBlogs', {
+  ref: 'Blog',
+  localField: 'series.name',
+  foreignField: 'series.name',
+  match: function() {
+    return { _id: { $ne: this._id }, 'series.name': { $ne: '' } };
+  }
 });
 
 module.exports = mongoose.model('Blog', blogSchema);

@@ -5,6 +5,10 @@ export interface User {
   role: string;
   bio?: string;
   avatar?: string;
+  followers?: string[];
+  following?: string[];
+  readingList?: any[];
+  newsletterSubscription?: boolean;
 }
 
 export interface Blog {
@@ -27,4 +31,9 @@ export interface Blog {
   category: string;
   featuredImage?: string;
   isDraft: boolean;
+  series?: {
+    name: string;
+    part: number;
+  };
+  shares?: number;
 }

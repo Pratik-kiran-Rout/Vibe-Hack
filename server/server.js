@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const blogRoutes = require('./routes/blogs');
 const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/upload');
+const socialRoutes = require('./routes/social');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/social', socialRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)

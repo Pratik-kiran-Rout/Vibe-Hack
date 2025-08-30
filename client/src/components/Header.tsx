@@ -43,6 +43,9 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
+                <Link to="/reading-list" className="text-white hover:text-blue-200 transition-colors">
+                  📖 Reading List
+                </Link>
                 <Link to="/create" className="btn-primary">
                   Write Blog
                 </Link>

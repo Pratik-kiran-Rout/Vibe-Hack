@@ -99,7 +99,7 @@ router.post('/', auth, [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { title, content, excerpt, tags, featuredImage, category, isDraft } = req.body;
+    const { title, content, excerpt, tags, featuredImage, category, isDraft, series } = req.body;
 
     // Calculate read time (average 200 words per minute)
     const wordCount = content ? content.split(' ').length : 0;
@@ -119,6 +119,7 @@ router.post('/', auth, [
       tags: tags || [],
       featuredImage: featuredImage || '',
       category: category || 'Other',
+      series: series || { name: '', part: 0 },
       readTime,
       isDraft: isDraft !== false,
       status
@@ -150,7 +151,7 @@ router.put('/:id', auth, [
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    const { title, content, excerpt, tags, featuredImage, category, isDraft } = req.body;
+    const { title, content, excerpt, tags, featuredImage, category, isDraft, series } = req.body;
     const updateData = {};
 
     if (title) updateData.title = title;
@@ -163,6 +164,7 @@ router.put('/:id', auth, [
     if (tags) updateData.tags = tags;
     if (featuredImage !== undefined) updateData.featuredImage = featuredImage;
     if (category) updateData.category = category;
+    if (series) updateData.series = series;
     if (isDraft !== undefined) {
       updateData.isDraft = isDraft;
       updateData.status = isDraft ? 'draft' : (content && excerpt ? 'pending' : 'draft');

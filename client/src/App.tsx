@@ -15,6 +15,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import CreateBlog from './pages/CreateBlog';
 import AdminDashboard from './pages/AdminDashboard';
+import ReadingList from './pages/ReadingList';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -39,6 +40,11 @@ function App() {
               <Route path="/profile" element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/reading-list" element={
+                <ProtectedRoute>
+                  <ReadingList />
                 </ProtectedRoute>
               } />
               <Route path="/create" element={

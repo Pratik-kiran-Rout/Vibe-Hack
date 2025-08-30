@@ -13,6 +13,8 @@ const CreateBlog: React.FC = () => {
   const [tags, setTags] = useState('');
   const [category, setCategory] = useState('Other');
   const [featuredImage, setFeaturedImage] = useState('');
+  const [seriesName, setSeriesName] = useState('');
+  const [seriesPart, setSeriesPart] = useState(1);
   const [editorMode, setEditorMode] = useState<'rich' | 'markdown'>('rich');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -54,6 +56,8 @@ const CreateBlog: React.FC = () => {
       setTags(blog.tags.join(', '));
       setCategory(blog.category);
       setFeaturedImage(blog.featuredImage);
+      setSeriesName(blog.series?.name || '');
+      setSeriesPart(blog.series?.part || 1);
       setIsDraft(blog.isDraft);
     } catch (error) {
       setError('Failed to load blog');
@@ -74,6 +78,7 @@ const CreateBlog: React.FC = () => {
         tags: tagsArray,
         category,
         featuredImage,
+        series: seriesName ? { name: seriesName, part: seriesPart } : undefined,
         isDraft: true
       };
 
@@ -124,6 +129,7 @@ const CreateBlog: React.FC = () => {
         tags: tagsArray,
         category,
         featuredImage,
+        series: seriesName ? { name: seriesName, part: seriesPart } : undefined,
         isDraft: !publish
       };
 
@@ -240,6 +246,34 @@ const CreateBlog: React.FC = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. javascript, react, tutorial"
               />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Series Name (optional)
+                </label>
+                <input
+                  type="text"
+                  value={seriesName}
+                  onChange={(e) => setSeriesName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="e.g. React Tutorial Series"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Part Number
+                </label>
+                <input
+                  type="number"
+                  value={seriesPart}
+                  onChange={(e) => setSeriesPart(parseInt(e.target.value) || 1)}
+                  min="1"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  disabled={!seriesName}
+                />
+              </div>
             </div>
 
             <div>

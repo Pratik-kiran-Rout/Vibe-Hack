@@ -35,6 +35,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     maxlength: 500,
     default: ''
+  },
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  readingList: [{
+    blog: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    },
+    savedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  newsletterSubscription: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
