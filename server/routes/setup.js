@@ -4,6 +4,34 @@ const User = require('../models/User');
 
 const router = express.Router();
 
+// Reset and create admin route
+router.get('/reset-admin', async (req, res) => {
+  try {
+    // Delete existing admin if any
+    await User.deleteMany({ role: 'admin' });
+    
+    // Create fresh admin user
+    const admin = new User({
+      username: 'admin',
+      email: 'admin@devnote.com',
+      password: 'admin123',
+      role: 'admin'
+    });
+
+    await admin.save();
+    
+    res.json({ 
+      message: 'Admin user reset and created successfully',
+      credentials: {
+        email: 'admin@devnote.com',
+        password: 'admin123'
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error resetting admin', error: error.message });
+  }
+});
+
 // One-time admin setup route
 router.get('/create-admin', async (req, res) => {
   try {
