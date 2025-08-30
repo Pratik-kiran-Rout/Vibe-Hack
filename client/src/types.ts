@@ -24,4 +24,7 @@ export interface Blog {
   comments: any[];
   readTime: number;
   tags: string[];
+  category: string;
+  featuredImage?: string;
+  isDraft: boolean;
 }

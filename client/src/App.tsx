@@ -46,6 +46,11 @@ function App() {
                   <CreateBlog />
                 </ProtectedRoute>
               } />
+              <Route path="/create/:id" element={
+                <ProtectedRoute>
+                  <CreateBlog />
+                </ProtectedRoute>
+              } />
               <Route path="/admin" element={
                 <ProtectedRoute adminOnly>
                   <AdminDashboard />

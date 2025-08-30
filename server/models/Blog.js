@@ -23,8 +23,14 @@ const blogSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'approved', 'rejected', 'hidden'],
-    default: 'pending'
+    enum: ['draft', 'pending', 'approved', 'rejected', 'hidden'],
+    default: 'draft'
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: ['Technology', 'Programming', 'Web Development', 'Mobile Development', 'Data Science', 'AI/ML', 'DevOps', 'Design', 'Career', 'Tutorial', 'News', 'Opinion', 'Other'],
+    default: 'Other'
   },
   tags: [{
     type: String,
@@ -59,6 +65,10 @@ const blogSchema = new mongoose.Schema({
   featuredImage: {
     type: String,
     default: ''
+  },
+  isDraft: {
+    type: Boolean,
+    default: true
   },
   readTime: {
     type: Number,

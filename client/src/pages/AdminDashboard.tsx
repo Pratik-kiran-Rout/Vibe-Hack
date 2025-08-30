@@ -13,6 +13,7 @@ interface Blog {
   createdAt: string;
   views: number;
   likes: any[];
+  category: string;
 }
 
 interface Stats {
@@ -111,7 +112,7 @@ const AdminDashboard: React.FC = () => {
         {/* Filter Tabs */}
         <div className="card mb-8">
           <div className="flex gap-4 mb-6">
-            {['pending', 'approved', 'rejected', 'hidden'].map((status) => (
+            {['draft', 'pending', 'approved', 'rejected', 'hidden'].map((status) => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
@@ -141,6 +142,11 @@ const AdminDashboard: React.FC = () => {
                         {blog.title}
                       </h3>
                       <p className="text-gray-600 mb-3 line-clamp-2">{blog.excerpt}</p>
+                      <div className="flex items-center gap-6 text-sm text-gray-500 mb-2">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">
+                          {blog.category}
+                        </span>
+                      </div>
                       <div className="flex items-center gap-6 text-sm text-gray-500">
                         <span>👤 {blog.author.username}</span>
                         <span>📧 {blog.author.email}</span>

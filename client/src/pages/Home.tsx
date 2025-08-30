@@ -14,6 +14,7 @@ interface Blog {
   views: number;
   likes: any[];
   readTime: number;
+  category: string;
 }
 
 const Home: React.FC = () => {

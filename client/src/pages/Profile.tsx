@@ -11,26 +11,34 @@ interface Blog {
   createdAt: string;
   views: number;
   likes: any[];
+  category: string;
+  isDraft: boolean;
 }
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [drafts, setDrafts] = useState<Blog[]>([]);
+  const [activeTab, setActiveTab] = useState<'published' | 'drafts'>('published');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserBlogs = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get('/api/blogs/user/my-blogs');
-        setBlogs(response.data);
+        const [blogsResponse, draftsResponse] = await Promise.all([
+          axios.get('/api/blogs/user/my-blogs'),
+          axios.get('/api/blogs/user/drafts')
+        ]);
+        setBlogs(blogsResponse.data.filter((blog: Blog) => blog.status !== 'draft'));
+        setDrafts(draftsResponse.data);
       } catch (error) {
-        console.error('Error fetching user blogs:', error);
+        console.error('Error fetching user data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserBlogs();
+    fetchUserData();
   }, []);
 
   const getStatusColor = (status: string) => {
@@ -95,9 +103,9 @@ const Profile: React.FC = () => {
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-yellow-600">
-              {blogs.filter(b => b.status === 'pending').length}
+              {drafts.length}
             </div>
-            <div className="text-gray-600">Pending</div>
+            <div className="text-gray-600">Drafts</div>
           </div>
           <div className="card text-center">
             <div className="text-2xl font-bold text-blue-600">
@@ -110,52 +118,119 @@ const Profile: React.FC = () => {
         {/* Blogs List */}
         <div className="card">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">My Blogs</h2>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setActiveTab('published')}
+                className={`px-4 py-2 rounded-md font-medium ${
+                  activeTab === 'published'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Published ({blogs.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('drafts')}
+                className={`px-4 py-2 rounded-md font-medium ${
+                  activeTab === 'drafts'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Drafts ({drafts.length})
+              </button>
+            </div>
             <Link to="/create" className="btn-primary">
               + New Blog
             </Link>
           </div>
 
-          {blogs.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📝</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">No blogs yet</h3>
-              <p className="text-gray-600 mb-6">Start sharing your thoughts with the world!</p>
-              <Link to="/create" className="btn-primary">
-                Write Your First Blog
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {blogs.map((blog) => (
-                <div key={blog._id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          {blog.status === 'approved' ? (
-                            <Link to={`/post/${blog._id}`} className="hover:text-purple-600">
-                              {blog.title}
-                            </Link>
-                          ) : (
-                            blog.title
-                          )}
-                        </h3>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(blog.status)}`}>
-                          {blog.status.charAt(0).toUpperCase() + blog.status.slice(1)}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 mb-3 line-clamp-2">{blog.excerpt}</p>
-                      <div className="flex items-center gap-6 text-sm text-gray-500">
-                        <span>📅 {new Date(blog.createdAt).toLocaleDateString()}</span>
-                        <span>👁 {blog.views} views</span>
-                        <span>❤️ {blog.likes.length} likes</span>
+          {activeTab === 'published' ? (
+            blogs.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📝</div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">No published blogs yet</h3>
+                <p className="text-gray-600 mb-6">Start sharing your thoughts with the world!</p>
+                <Link to="/create" className="btn-primary">
+                  Write Your First Blog
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {blogs.map((blog) => (
+                  <div key={blog._id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-semibold text-gray-800">
+                            {blog.status === 'approved' ? (
+                              <Link to={`/post/${blog._id}`} className="hover:text-purple-600">
+                                {blog.title}
+                              </Link>
+                            ) : (
+                              blog.title
+                            )}
+                          </h3>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(blog.status)}`}>
+                            {blog.status.charAt(0).toUpperCase() + blog.status.slice(1)}
+                          </span>
+                          <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">
+                            {blog.category}
+                          </span>
+                        </div>
+                        <p className="text-gray-600 mb-3 line-clamp-2">{blog.excerpt}</p>
+                        <div className="flex items-center gap-6 text-sm text-gray-500">
+                          <span>📅 {new Date(blog.createdAt).toLocaleDateString()}</span>
+                          <span>👁 {blog.views} views</span>
+                          <span>❤️ {blog.likes.length} likes</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
+          ) : (
+            drafts.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📝</div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">No drafts yet</h3>
+                <p className="text-gray-600 mb-6">Save your work in progress here!</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {drafts.map((draft) => (
+                  <div key={draft._id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-semibold text-gray-800">
+                            <Link to={`/create/${draft._id}`} className="hover:text-purple-600">
+                              {draft.title || 'Untitled Draft'}
+                            </Link>
+                          </h3>
+                          <span className="px-2 py-1 bg-yellow-100 text-yellow-600 rounded-full text-xs">
+                            Draft
+                          </span>
+                          <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">
+                            {draft.category}
+                          </span>
+                        </div>
+                        <p className="text-gray-600 mb-3 line-clamp-2">
+                          {draft.excerpt || 'No excerpt yet...'}
+                        </p>
+                        <div className="flex items-center gap-6 text-sm text-gray-500">
+                          <span>📅 Last edited: {new Date(draft.createdAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <Link to={`/create/${draft._id}`} className="px-4 py-2 text-purple-600 hover:bg-purple-50 rounded">
+                        Edit
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
           )}
         </div>
       </div>

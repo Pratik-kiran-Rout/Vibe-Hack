@@ -56,7 +56,7 @@ router.put('/blogs/:id/status', adminAuth, async (req, res) => {
   try {
     const { status } = req.body;
     
-    if (!['pending', 'approved', 'rejected', 'hidden'].includes(status)) {
+    if (!['draft', 'pending', 'approved', 'rejected', 'hidden'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status' });
     }
 

@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
     const tag = req.query.tag || '';
+    const category = req.query.category || '';
     const sort = req.query.sort || 'createdAt';
 
     let query = { status: 'approved' };
@@ -22,6 +23,10 @@ router.get('/', async (req, res) => {
     
     if (tag) {
       query.tags = { $in: [tag] };
+    }
+
+    if (category) {
+      query.category = category;
     }
 
     const blogs = await Blog.find(query)
@@ -83,9 +88,10 @@ router.get('/:id', async (req, res) => {
 // Create blog
 router.post('/', auth, [
   body('title').isLength({ min: 5, max: 200 }).trim().escape(),
-  body('content').isLength({ min: 100 }),
-  body('excerpt').isLength({ min: 10, max: 300 }).trim().escape(),
-  body('tags').optional().isArray()
+  body('content').optional().isLength({ min: 1 }),
+  body('excerpt').optional().isLength({ min: 10, max: 300 }).trim().escape(),
+  body('tags').optional().isArray(),
+  body('category').optional().isIn(['Technology', 'Programming', 'Web Development', 'Mobile Development', 'Data Science', 'AI/ML', 'DevOps', 'Design', 'Career', 'Tutorial', 'News', 'Opinion', 'Other'])
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -93,20 +99,29 @@ router.post('/', auth, [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { title, content, excerpt, tags, featuredImage } = req.body;
+    const { title, content, excerpt, tags, featuredImage, category, isDraft } = req.body;
 
     // Calculate read time (average 200 words per minute)
-    const wordCount = content.split(' ').length;
-    const readTime = Math.ceil(wordCount / 200);
+    const wordCount = content ? content.split(' ').length : 0;
+    const readTime = Math.ceil(wordCount / 200) || 1;
+
+    // Determine status based on draft flag
+    let status = 'draft';
+    if (!isDraft && content && excerpt) {
+      status = 'pending'; // Submit for approval
+    }
 
     const blog = new Blog({
       title,
-      content,
-      excerpt,
+      content: content || '',
+      excerpt: excerpt || '',
       author: req.user._id,
       tags: tags || [],
       featuredImage: featuredImage || '',
-      readTime
+      category: category || 'Other',
+      readTime,
+      isDraft: isDraft !== false,
+      status
     });
 
     await blog.save();
@@ -135,7 +150,7 @@ router.put('/:id', auth, [
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    const { title, content, excerpt, tags, featuredImage } = req.body;
+    const { title, content, excerpt, tags, featuredImage, category, isDraft } = req.body;
     const updateData = {};
 
     if (title) updateData.title = title;
@@ -147,6 +162,11 @@ router.put('/:id', auth, [
     if (excerpt) updateData.excerpt = excerpt;
     if (tags) updateData.tags = tags;
     if (featuredImage !== undefined) updateData.featuredImage = featuredImage;
+    if (category) updateData.category = category;
+    if (isDraft !== undefined) {
+      updateData.isDraft = isDraft;
+      updateData.status = isDraft ? 'draft' : (content && excerpt ? 'pending' : 'draft');
+    }
 
     const updatedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
@@ -218,7 +238,7 @@ router.post('/:id/comment', auth, [
   }
 });
 
-// Get user's blogs
+// Get user's blogs (including drafts)
 router.get('/user/my-blogs', auth, async (req, res) => {
   try {
     const blogs = await Blog.find({ author: req.user._id })
@@ -226,6 +246,22 @@ router.get('/user/my-blogs', auth, async (req, res) => {
       .select('-comments');
 
     res.json(blogs);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get user's drafts
+router.get('/user/drafts', auth, async (req, res) => {
+  try {
+    const drafts = await Blog.find({ 
+      author: req.user._id, 
+      status: 'draft' 
+    })
+      .sort({ updatedAt: -1 })
+      .select('-comments');
+
+    res.json(drafts);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

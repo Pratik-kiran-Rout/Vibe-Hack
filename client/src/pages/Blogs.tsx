@@ -15,23 +15,39 @@ interface Blog {
   likes: any[];
   readTime: number;
   tags: string[];
+  category: string;
 }
 
 const Blogs: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const categories = [
+    'All', 'Technology', 'Programming', 'Web Development', 'Mobile Development',
+    'Data Science', 'AI/ML', 'DevOps', 'Design', 'Career', 'Tutorial',
+    'News', 'Opinion', 'Other'
+  ];
+
   useEffect(() => {
     fetchBlogs();
-  }, [currentPage, search]);
+  }, [currentPage, search, category]);
 
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/blogs?page=${currentPage}&search=${search}&limit=9`);
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        search,
+        limit: '9'
+      });
+      if (category && category !== 'All') {
+        params.append('category', category);
+      }
+      const response = await axios.get(`/api/blogs?${params}`);
       setBlogs(response.data.blogs);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -63,19 +79,30 @@ const Blogs: React.FC = () => {
           <p className="text-white/80 text-lg">Discover amazing stories and insights from our community</p>
         </div>
 
-        {/* Search */}
-        <div className="max-w-2xl mx-auto mb-12">
-          <form onSubmit={handleSearch} className="flex gap-4">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search blogs..."
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <button type="submit" className="btn-primary px-8">
-              Search
-            </button>
+        {/* Search and Filters */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <form onSubmit={handleSearch} className="flex flex-col gap-4">
+            <div className="flex gap-4">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search blogs..."
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat === 'All' ? '' : cat}>{cat}</option>
+                ))}
+              </select>
+              <button type="submit" className="btn-primary px-8">
+                Search
+              </button>
+            </div>
           </form>
         </div>
 
@@ -90,16 +117,19 @@ const Blogs: React.FC = () => {
               </h3>
               <p className="text-gray-600 mb-4 line-clamp-3">{blog.excerpt}</p>
               
-              {/* Tags */}
-              {blog.tags && blog.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {blog.tags.slice(0, 3).map((tag, index) => (
+              {/* Category and Tags */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">
+                  {blog.category}
+                </span>
+                {blog.tags && blog.tags.length > 0 && (
+                  blog.tags.slice(0, 2).map((tag, index) => (
                     <span key={index} className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">
                       {tag}
                     </span>
-                  ))}
-                </div>
-              )}
+                  ))
+                )}
+              </div>
 
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>By {blog.author.username}</span>
