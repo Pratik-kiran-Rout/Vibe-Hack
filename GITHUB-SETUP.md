@@ -10,16 +10,15 @@ npm run install-all
 ```
 
 ### 2. Environment Setup
-Create `server/.env` file:
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/devnote
-JWT_SECRET=your_jwt_secret_key_here_make_it_long_and_secure
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
+Copy and rename the example files:
+```bash
+cp server/.env.example server/.env
+cp client/.env.example client/.env
 ```
+
+Or manually create:
+- `server/.env` (copy from server/.env.example)
+- `client/.env` (copy from client/.env.example)
 
 ### 3. Start Application
 ```bash
