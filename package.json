@@ -15,6 +15,9 @@
   "keywords": ["blog", "mern", "react", "nodejs", "mongodb"],
   "author": "DevNote Team",
   "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  },
   "devDependencies": {
     "concurrently": "^7.6.0"
   }
