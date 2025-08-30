@@ -13,19 +13,21 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-white/95 backdrop-blur-sm shadow-soft border-b border-gray-100 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-2xl font-bold text-primary-600">
-            DevNote
+          <Link to="/" className="text-2xl font-bold text-gradient hover:scale-105 transition-transform">
+            📝 DevNote
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-gray-600 hover:text-primary-600">
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/" className="text-gray-600 hover:text-primary-600 font-medium transition-colors relative group">
               Home
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full"></span>
             </Link>
-            <Link to="/blogs/trending" className="text-gray-600 hover:text-primary-600">
+            <Link to="/blogs/trending" className="text-gray-600 hover:text-primary-600 font-medium transition-colors relative group">
               Trending
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full"></span>
             </Link>
           </nav>
 
