@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevNote - Blog Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.294.0/lucide.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-900">DevNote</h1>
+                <nav class="flex items-center space-x-6">
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Home</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Write</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to DevNote</h1>
+            <p class="text-xl text-gray-600 mb-6">Discover amazing articles and share your knowledge with the community</p>
+            
+            <!-- Search Bar -->
+            <div class="relative max-w-md">
+                <input type="text" placeholder="Search articles..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <i data-lucide="search" class="absolute right-3 top-2.5 text-gray-400 w-5 h-5"></i>
+            </div>
+        </div>
+
+        <!-- Trending Section -->
+        <div class="mb-12">
+            <div class="flex items-center space-x-2 mb-6">
+                <i data-lucide="trending-up" class="text-orange-500 w-6 h-6"></i>
+                <h2 class="text-2xl font-bold text-gray-900">Trending Now</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Trending Blog 1 -->
+                <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="p-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+                            <span>John Doe</span>
+                            <span>•</span>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                                <span>Dec 15, 2023</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                            Building Modern Web Applications with React
+                        </h3>
+                        <p class="text-gray-600 mb-4">
+                            Learn how to create scalable and maintainable web applications using React, including best practices for component architecture...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="heart" class="w-4 h-4"></i>
+                                    <span>24</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                    <span>8</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                    <span>156</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">React</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Web Dev</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trending Blog 2 -->
+                <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="p-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+                            <span>Sarah Wilson</span>
+                            <span>•</span>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                                <span>Dec 14, 2023</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                            Node.js Performance Optimization Tips
+                        </h3>
+                        <p class="text-gray-600 mb-4">
+                            Discover essential techniques to optimize your Node.js applications for better performance and scalability in production...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="heart" class="w-4 h-4"></i>
+                                    <span>31</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                    <span>12</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                    <span>203</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Node.js</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Backend</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trending Blog 3 -->
+                <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="p-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+                            <span>Mike Chen</span>
+                            <span>•</span>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                                <span>Dec 13, 2023</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                            Database Design Best Practices
+                        </h3>
+                        <p class="text-gray-600 mb-4">
+                            Learn fundamental principles of database design that will help you create efficient and maintainable database schemas...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="heart" class="w-4 h-4"></i>
+                                    <span>18</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                    <span>5</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                    <span>89</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Database</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">SQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Articles Section -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Latest Articles</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Blog Post 1 -->
+            <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                <div class="p-6">
+                    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+                        <span>Alex Johnson</span>
+                        <span>•</span>
+                        <div class="flex items-center space-x-1">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                            <span>Dec 12, 2023</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                        Getting Started with TypeScript
+                    </h3>
+                    <p class="text-gray-600 mb-4">
+                        A comprehensive guide to TypeScript for JavaScript developers. Learn the basics and advanced features...
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                                <span>15</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>3</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                <span>67</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">TypeScript</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post 2 -->
+            <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                <div class="p-6">
+                    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+                        <span>Emma Davis</span>
+                        <span>•</span>
+                        <div class="flex items-center space-x-1">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                            <span>Dec 11, 2023</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                        CSS Grid vs Flexbox: When to Use What
+                    </h3>
+                    <p class="text-gray-600 mb-4">
+                        Understanding the differences between CSS Grid and Flexbox and when to use each layout method...
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                                <span>22</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>7</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                <span>134</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">CSS</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Layout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post 3 -->
+            <div class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                <div class="p-6">
+                    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-3">
+                        <span>David Lee</span>
+                        <span>•</span>
+                        <div class="flex items-center space-x-1">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                            <span>Dec 10, 2023</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer">
+                        API Security Best Practices
+                    </h3>
+                    <p class="text-gray-600 mb-4">
+                        Essential security measures every developer should implement when building and consuming APIs...
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                                <span>28</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>9</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                <span>178</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Security</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">API</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
