@@ -122,7 +122,7 @@ const Home: React.FC = () => {
                         {blog.title}
                       </Link>
                     </h4>
-                    <p className="text-sm text-gray-600 mb-2">{blog.excerpt.substring(0, 100)}...</p>
+                    <p className="text-sm text-gray-600 mb-2">{blog.excerpt?.substring(0, 100) || 'No excerpt available'}...</p>
                     <div className="flex items-center gap-4 text-xs text-gray-500">
                       <span>👁 {blog.views}</span>
                       <span>❤️ {blog.likes.length}</span>
