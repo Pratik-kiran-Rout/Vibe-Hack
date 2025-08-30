@@ -5,7 +5,7 @@ const User = require('../models/User');
 const router = express.Router();
 
 // One-time admin setup route
-router.post('/create-admin', async (req, res) => {
+router.get('/create-admin', async (req, res) => {
   try {
     // Check if admin already exists
     const existingAdmin = await User.findOne({ role: 'admin' });
