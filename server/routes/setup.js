@@ -13,13 +13,11 @@ router.get('/create-admin', async (req, res) => {
       return res.status(400).json({ message: 'Admin already exists' });
     }
 
-    // Create admin user
-    const hashedPassword = await bcrypt.hash('admin123', 12);
-    
+    // Create admin user (password will be hashed by User model pre-save hook)
     const admin = new User({
       username: 'admin',
       email: 'admin@devnote.com',
-      password: hashedPassword,
+      password: 'admin123',
       role: 'admin'
     });
 
