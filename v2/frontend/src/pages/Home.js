@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BlogCard from '../components/BlogCard';
-import SearchBar from '../components/SearchBar';
+import AdvancedSearch from '../components/AdvancedSearch';
+import Pagination from '../components/Pagination';
 import { TrendingUp } from 'lucide-react';
 
 const Home = () => {
@@ -9,16 +10,24 @@ const Home = () => {
   const [trendingBlogs, setTrendingBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState(null);
+  const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchBlogs();
+    fetchBlogs(currentPage);
     fetchTrendingBlogs();
-  }, []);
+  }, [currentPage]);
 
-  const fetchBlogs = async () => {
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const fetchBlogs = async (page = 1) => {
     try {
-      const res = await axios.get('http://localhost:5000/api/blogs');
+      const res = await axios.get(`http://localhost:5000/api/blogs?page=${page}&limit=9`);
       setBlogs(res.data.blogs);
+      setPagination(res.data.pagination);
     } catch (error) {
       console.error('Error fetching blogs:', error);
     } finally {
@@ -35,18 +44,24 @@ const Home = () => {
     }
   };
 
-  const handleSearch = async (query) => {
-    if (!query.trim()) {
-      setSearchResults(null);
-      return;
-    }
-
+  const handleSearch = async (filters) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/blogs/search?q=${query}`);
+      const params = new URLSearchParams();
+      Object.keys(filters).forEach(key => {
+        if (filters[key]) {
+          params.append(key, filters[key]);
+        }
+      });
+      
+      const res = await axios.get(`http://localhost:5000/api/blogs/search?${params}`);
       setSearchResults(res.data);
     } catch (error) {
       console.error('Error searching blogs:', error);
     }
+  };
+
+  const handleClearSearch = () => {
+    setSearchResults(null);
   };
 
   if (loading) {
@@ -68,9 +83,13 @@ const Home = () => {
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
           Discover amazing articles, share your knowledge, and connect with developers worldwide
         </p>
+<<<<<<< HEAD
+        <AdvancedSearch onSearch={handleSearch} onClear={handleClearSearch} />
+=======
         <div className="max-w-2xl mx-auto">
           <SearchBar onSearch={handleSearch} />
         </div>
+>>>>>>> affeb88f4bbfdbed658101c827d382fed99e5aa7
       </div>
 
       {trendingBlogs.length > 0 && !searchResults && (
@@ -96,11 +115,29 @@ const Home = () => {
       </div>
 
       {displayBlogs.length > 0 ? (
+<<<<<<< HEAD
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayBlogs.map((blog) => (
+              <BlogCard key={blog._id} blog={blog} />
+            ))}
+          </div>
+          
+          {!searchResults && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={pagination.pages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </>
+=======
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {displayBlogs.map((blog) => (
             <BlogCard key={blog._id} blog={blog} />
           ))}
         </div>
+>>>>>>> affeb88f4bbfdbed658101c827d382fed99e5aa7
       ) : (
         <div className="text-center py-16">
           <div className="text-6xl mb-4">📝</div>

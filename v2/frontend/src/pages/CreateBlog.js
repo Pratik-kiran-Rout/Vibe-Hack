@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+<<<<<<< HEAD
 import { Bold, Italic, Underline, List, ListOrdered, Link, Image, Eye, Save, Upload } from 'lucide-react';
+=======
+import MarkdownEditor from '../components/MarkdownEditor';
+>>>>>>> afd94a12ac38dd8fbef39f99445413c2773b50fe
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState({
@@ -326,7 +330,36 @@ const CreateBlog = () => {
             </div>
           </div>
 
+<<<<<<< HEAD
           <div className="flex items-center justify-between pt-6 border-t">
+=======
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Content
+            </label>
+            <MarkdownEditor
+              value={formData.content}
+              onChange={(value) => setFormData({ ...formData, content: value })}
+              placeholder="Write your blog content here... Markdown is supported!"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Tags (comma separated)
+            </label>
+            <input
+              type="text"
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              placeholder="e.g. javascript, react, web development"
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+>>>>>>> afd94a12ac38dd8fbef39f99445413c2773b50fe
             <button
               type="button"
               onClick={() => navigate(-1)}
