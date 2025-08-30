@@ -75,57 +75,57 @@ const AnalyticsDashboard: React.FC = () => {
     <div className="space-y-6">
       {/* Writing Statistics */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">📝 Writing Statistics</h3>
+        <h3 className="text-lg font-semibold text-primary mb-4">📝 Writing Statistics</h3>
         <div className="grid md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">{data.writingStats.totalBlogs}</div>
-            <div className="text-sm text-gray-600">Total Blogs</div>
+            <div className="text-sm text-secondary">Total Blogs</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{data.writingStats.totalViews.toLocaleString()}</div>
-            <div className="text-sm text-gray-600">Total Views</div>
+            <div className="text-sm text-secondary">Total Views</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{data.writingStats.avgViewsPerBlog}</div>
-            <div className="text-sm text-gray-600">Avg Views/Blog</div>
+            <div className="text-sm text-secondary">Avg Views/Blog</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-600">{data.writingStats.engagementRate}%</div>
-            <div className="text-sm text-gray-600">Engagement Rate</div>
+            <div className="text-sm text-secondary">Engagement Rate</div>
           </div>
         </div>
         
         <div className="grid md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
           <div className="text-center">
             <div className="text-xl font-bold text-red-600">{data.writingStats.totalLikes}</div>
-            <div className="text-sm text-gray-600">Total Likes</div>
+            <div className="text-sm text-secondary">Total Likes</div>
           </div>
           <div className="text-center">
             <div className="text-xl font-bold text-indigo-600">{data.writingStats.totalComments}</div>
-            <div className="text-sm text-gray-600">Total Comments</div>
+            <div className="text-sm text-secondary">Total Comments</div>
           </div>
           <div className="text-center">
             <div className="text-xl font-bold text-teal-600">{data.writingStats.totalShares}</div>
-            <div className="text-sm text-gray-600">Total Shares</div>
+            <div className="text-sm text-secondary">Total Shares</div>
           </div>
         </div>
       </div>
 
       {/* Reading Statistics */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">📚 Reading Statistics</h3>
+        <h3 className="text-lg font-semibold text-primary mb-4">📚 Reading Statistics</h3>
         <div className="grid md:grid-cols-3 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">{data.readingStats.totalArticlesRead}</div>
-            <div className="text-sm text-gray-600">Articles Read</div>
+            <div className="text-sm text-secondary">Articles Read</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{formatTime(data.readingStats.totalReadingTime)}</div>
-            <div className="text-sm text-gray-600">Reading Time</div>
+            <div className="text-sm text-secondary">Reading Time</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{data.readingStats.savedArticles}</div>
-            <div className="text-sm text-gray-600">Saved Articles</div>
+            <div className="text-sm text-secondary">Saved Articles</div>
           </div>
         </div>
       </div>
@@ -133,15 +133,15 @@ const AnalyticsDashboard: React.FC = () => {
       {/* Top Performing Blogs */}
       {data.topBlogs.length > 0 && (
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">🏆 Top Performing Blogs</h3>
+          <h3 className="text-lg font-semibold text-primary mb-4">🏆 Top Performing Blogs</h3>
           <div className="space-y-3">
             {data.topBlogs.map((blog, index) => (
-              <div key={blog._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={blog._id} className="flex items-center justify-between p-3 rounded-lg" style={{background: 'var(--bg-surface)'}}>
                 <div className="flex items-center gap-3">
                   <span className="text-lg font-bold text-purple-600">#{index + 1}</span>
                   <div>
-                    <h4 className="font-medium text-gray-800 line-clamp-1">{blog.title}</h4>
-                    <div className="text-sm text-gray-500">
+                    <h4 className="font-medium text-primary line-clamp-1">{blog.title}</h4>
+                    <div className="text-sm text-muted">
                       Published: {new Date(blog.createdAt).toLocaleDateString()}
                     </div>
                   </div>
@@ -159,10 +159,10 @@ const AnalyticsDashboard: React.FC = () => {
 
       {/* Recent Activity */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">📈 Recent Activity</h3>
+        <h3 className="text-lg font-semibold text-primary mb-4">📈 Recent Activity</h3>
         <div className="text-center">
           <div className="text-3xl font-bold text-purple-600">{data.recentActivity}</div>
-          <div className="text-gray-600">Blogs published in the last 30 days</div>
+          <div className="text-secondary">Blogs published in the last 30 days</div>
         </div>
       </div>
     </div>

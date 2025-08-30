@@ -94,17 +94,17 @@ const Home: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {latestBlogs.map((blog) => (
               <div key={blog._id} className="card hover:transform hover:scale-105 transition-all duration-300">
-                <h3 className="text-xl font-semibold mb-3 text-gray-800">
-                  <Link to={`/post/${blog._id}`} className="hover:text-purple-600">
+                <h3 className="text-xl font-semibold mb-3 text-primary">
+                  <Link to={`/post/${blog._id}`} className="hover:text-purple-400 transition-colors">
                     {blog.title}
                   </Link>
                 </h3>
-                <p className="text-gray-600 mb-4 line-clamp-3">{blog.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-gray-500">
+                <p className="mb-4 line-clamp-3 text-secondary">{blog.excerpt}</p>
+                <div className="flex items-center justify-between text-sm text-muted">
                   <span>By {blog.author.username}</span>
                   <span>{blog.readTime} min read</span>
                 </div>
-                <div className="flex items-center justify-between mt-3 text-sm text-gray-500">
+                <div className="flex items-center justify-between mt-3 text-sm text-muted">
                   <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
                   <div className="flex items-center gap-4">
                     <span>👁 {blog.views}</span>
@@ -132,13 +132,13 @@ const Home: React.FC = () => {
                 <div className="flex items-start gap-4">
                   <span className="text-2xl font-bold text-purple-600">#{index + 1}</span>
                   <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">
-                      <Link to={`/post/${blog._id}`} className="hover:text-purple-600">
+                    <h4 className="font-semibold mb-2 text-primary">
+                      <Link to={`/post/${blog._id}`} className="hover:text-purple-400 transition-colors">
                         {blog.title}
                       </Link>
                     </h4>
-                    <p className="text-sm text-gray-600 mb-2">{blog.excerpt?.substring(0, 100) || 'No excerpt available'}...</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <p className="text-sm mb-2 text-secondary">{blog.excerpt?.substring(0, 100) || 'No excerpt available'}...</p>
+                    <div className="flex items-center gap-4 text-xs text-muted">
                       <span>👁 {blog.views}</span>
                       <span>❤️ {blog.likes.length}</span>
                       <span>By {blog.author.username}</span>
@@ -158,18 +158,18 @@ const Home: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="card text-center">
               <div className="text-4xl mb-4">✍️</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Easy Writing</h3>
-              <p className="text-gray-600">Create beautiful blogs with our intuitive markdown editor and live preview.</p>
+              <h3 className="text-xl font-semibold mb-3 text-primary">Easy Writing</h3>
+              <p className="text-secondary">Create beautiful blogs with our intuitive markdown editor and live preview.</p>
             </div>
             <div className="card text-center">
               <div className="text-4xl mb-4">🚀</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Get Discovered</h3>
-              <p className="text-gray-600">Reach a wider audience with our trending algorithm and search features.</p>
+              <h3 className="text-xl font-semibold mb-3 text-primary">Get Discovered</h3>
+              <p className="text-secondary">Reach a wider audience with our trending algorithm and search features.</p>
             </div>
             <div className="card text-center">
               <div className="text-4xl mb-4">🤝</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Build Community</h3>
-              <p className="text-gray-600">Connect with other writers and readers through comments and interactions.</p>
+              <h3 className="text-xl font-semibold mb-3 text-primary">Build Community</h3>
+              <p className="text-secondary">Connect with other writers and readers through comments and interactions.</p>
             </div>
           </div>
         </div>

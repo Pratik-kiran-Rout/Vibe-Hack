@@ -23,10 +23,24 @@ import Forums from './pages/Forums';
 import WritingChallenges from './pages/WritingChallenges';
 import PeerReview from './pages/PeerReview';
 import PremiumPlans from './pages/PremiumPlans';
+import OfflineLibrary from './pages/OfflineLibrary';
 import ProtectedRoute from './components/ProtectedRoute';
+import AccessibilityPanel from './components/AccessibilityPanel';
+import { registerServiceWorker } from './utils/pwa';
+import { useTheme } from './hooks/useTheme';
 import './App.css';
 
 function App() {
+  const { theme } = useTheme();
+  
+  React.useEffect(() => {
+    registerServiceWorker();
+  }, []);
+  
+  React.useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
     <AuthProvider>
       <SocketProvider>
@@ -34,7 +48,7 @@ function App() {
           <div className="App">
             <ParticleBackground />
             <Header />
-          <main>
+          <main id="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/blogs" element={<Blogs />} />
@@ -83,9 +97,15 @@ function App() {
                 </ProtectedRoute>
               } />
               <Route path="/premium" element={<PremiumPlans />} />
+              <Route path="/offline-library" element={
+                <ProtectedRoute>
+                  <OfflineLibrary />
+                </ProtectedRoute>
+              } />
             </Routes>
           </main>
           <Footer />
+          <AccessibilityPanel />
           </div>
         </Router>
       </SocketProvider>

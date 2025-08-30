@@ -4,6 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
 import EarningsDashboard from '../components/EarningsDashboard';
+import ImportTools from '../components/ImportTools';
+import ExportTools from '../components/ExportTools';
+import WebhookManager from '../components/WebhookManager';
 
 interface Blog {
   _id: string;
@@ -21,7 +24,7 @@ const Profile: React.FC = () => {
   const { user } = useAuth();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [drafts, setDrafts] = useState<Blog[]>([]);
-  const [activeTab, setActiveTab] = useState<'published' | 'drafts' | 'analytics' | 'earnings'>('published');
+  const [activeTab, setActiveTab] = useState<'published' | 'drafts' | 'analytics' | 'earnings' | 'tools'>('published');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -123,43 +126,53 @@ const Profile: React.FC = () => {
             <div className="flex gap-4">
               <button
                 onClick={() => setActiveTab('published')}
-                className={`px-4 py-2 rounded-md font-medium ${
+                className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                   activeTab === 'published'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-purple-600 text-white border-purple-600'
+                    : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
                 }`}
               >
                 Published ({blogs.length})
               </button>
               <button
                 onClick={() => setActiveTab('drafts')}
-                className={`px-4 py-2 rounded-md font-medium ${
+                className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                   activeTab === 'drafts'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-purple-600 text-white border-purple-600'
+                    : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
                 }`}
               >
                 Drafts ({drafts.length})
               </button>
               <button
                 onClick={() => setActiveTab('analytics')}
-                className={`px-4 py-2 rounded-md font-medium ${
+                className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                   activeTab === 'analytics'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-purple-600 text-white border-purple-600'
+                    : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
                 }`}
               >
                 📊 Analytics
               </button>
               <button
                 onClick={() => setActiveTab('earnings')}
-                className={`px-4 py-2 rounded-md font-medium ${
+                className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                   activeTab === 'earnings'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-purple-600 text-white border-purple-600'
+                    : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
                 }`}
               >
                 💰 Earnings
+              </button>
+              <button
+                onClick={() => setActiveTab('tools')}
+                className={`px-4 py-2 rounded-md font-medium transition-colors border ${
+                  activeTab === 'tools'
+                    ? 'bg-purple-600 text-white border-purple-600'
+                    : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
+                }`}
+              >
+                🔧 Tools
               </button>
             </div>
             <Link to="/create" className="btn-primary">
@@ -257,6 +270,12 @@ const Profile: React.FC = () => {
             <AnalyticsDashboard />
           ) : activeTab === 'earnings' ? (
             <EarningsDashboard />
+          ) : activeTab === 'tools' ? (
+            <div className="space-y-6">
+              <ImportTools />
+              <ExportTools />
+              <WebhookManager />
+            </div>
           ) : null}
         </div>
       </div>

@@ -1,3 +1,4 @@
+@import './styles/tokens.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,8 +15,94 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-hero);
+  color: var(--text-primary);
   min-height: 100vh;
+  transition: all var(--transition-normal);
+  font-size: var(--font-size-base);
+}
+
+#main-content {
+  scroll-margin-top: 80px;
+}
+
+/* High contrast mode */
+.high-contrast {
+  --text-primary: #000000;
+  --bg-primary: #FFFFFF;
+  --color-primary: #0000FF;
+}
+
+.high-contrast .card {
+  border: 2px solid #000000;
+}
+
+/* Global text color inheritance */
+* {
+  color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+p, span, div {
+  color: var(--text-primary);
+}
+
+label, input, textarea, select {
+  color: var(--text-primary);
+}
+
+/* Text utility classes */
+.text-primary {
+  color: var(--text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Override Tailwind gray colors */
+.text-gray-800, .text-gray-700, .text-gray-600, .text-gray-500 {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-400 {
+  color: var(--text-secondary) !important;
+}
+
+/* Form elements */
+input, textarea, select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Button overrides */
+button {
+  color: inherit;
+}
+
+/* Table elements */
+table, th, td {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* Responsive font scaling */
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 14px;
+  }
 }
 
 code {
@@ -25,10 +112,12 @@ code {
 
 .prose {
   max-width: none;
+  font-size: inherit;
+  line-height: var(--line-height-base);
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-  color: #1f2937;
+  color: var(--text-primary);
   font-weight: 600;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
@@ -40,27 +129,32 @@ code {
 }
 
 .prose pre {
-  background: #1f2937;
-  color: #f9fafb;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   padding: 1rem;
   border-radius: 0.5rem;
   overflow-x: auto;
   margin: 1rem 0;
+  border: 1px solid var(--border-color);
 }
 
 .prose code {
-  background: #f3f4f6;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
   font-size: 0.875em;
 }
 
 .prose blockquote {
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--color-primary);
   padding-left: 1rem;
   margin: 1rem 0;
   font-style: italic;
-  color: #6b7280;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  padding: 1rem;
+  border-radius: 0.5rem;
 }
 
 .prose ul, .prose ol {

@@ -8,6 +8,8 @@ import RelatedPosts from '../components/RelatedPosts';
 import ReportButton from '../components/ReportButton';
 import LiveComments from '../components/LiveComments';
 import TipButton from '../components/TipButton';
+import ReadingProgress from '../components/ReadingProgress';
+import OfflineIndicator from '../components/OfflineIndicator';
 import { useAuth } from '../context/AuthContext';
 import { updateMetaTags, generateStructuredData } from '../utils/seo';
 
@@ -133,15 +135,16 @@ const BlogPost: React.FC = () => {
 
   return (
     <div className="min-h-screen py-8 px-6">
+      <ReadingProgress />
       <div className="container mx-auto max-w-4xl">
         <article className="card">
           {/* Header */}
           <header className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-primary">
               {blog.title}
             </h1>
             
-            <div className="flex items-center justify-between flex-wrap gap-4 text-sm text-gray-600 mb-4">
+            <div className="flex items-center justify-between flex-wrap gap-4 text-sm mb-4 text-secondary">
               <div className="flex items-center gap-4">
                 <span>By {blog.author.username}</span>
                 <span>•</span>
@@ -149,7 +152,7 @@ const BlogPost: React.FC = () => {
                 <span>•</span>
                 <span>{blog.readTime} min read</span>
                 <span>•</span>
-                <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">
+                <span className="px-2 py-1 bg-purple-100 text-purple-600 rounded-full text-xs">
                   {blog.category}
                 </span>
               </div>
@@ -158,26 +161,33 @@ const BlogPost: React.FC = () => {
                 <span>❤️ {blog.likes.length}</span>
                 <span>💬 {blog.comments.length}</span>
                 <ReadingListButton blogId={blog._id} />
+                <OfflineIndicator 
+                  blogId={blog._id}
+                  title={blog.title}
+                  content={blog.content}
+                  author={blog.author.username}
+                  createdAt={blog.createdAt}
+                />
                 <ReportButton blogId={blog._id} />
               </div>
             </div>
 
             {/* Series Info */}
             {blog.series?.name && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                <h4 className="font-semibold text-blue-800 mb-2">
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-purple-800 mb-2">
                   📚 Part {blog.series.part} of "{blog.series.name}" series
                 </h4>
                 {seriesBlogs.length > 1 && (
                   <div className="text-sm">
-                    <span className="text-blue-600">Other parts: </span>
+                    <span className="text-purple-600">Other parts: </span>
                     {seriesBlogs
                       .filter(b => b._id !== blog._id)
                       .sort((a, b) => a.series.part - b.series.part)
                       .map((seriesBlog, index) => (
                         <span key={seriesBlog._id}>
                           {index > 0 && ', '}
-                          <a href={`/post/${seriesBlog._id}`} className="text-blue-600 hover:underline">
+                          <a href={`/post/${seriesBlog._id}`} className="text-purple-600 hover:underline">
                             Part {seriesBlog.series.part}
                           </a>
                         </span>
@@ -229,9 +239,9 @@ const BlogPost: React.FC = () => {
                   </span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800">{blog.author.username}</h3>
+                  <h3 className="font-semibold text-primary">{blog.author.username}</h3>
                   {blog.author.bio && (
-                    <p className="text-gray-600 mt-1">{blog.author.bio}</p>
+                    <p className="mt-1 text-secondary">{blog.author.bio}</p>
                   )}
                 </div>
               </div>

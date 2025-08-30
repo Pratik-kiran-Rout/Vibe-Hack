@@ -1,0 +1,190 @@
+{
+  "timestamp": "2025-08-30T20:30:00.099Z",
+  "version": "1.0",
+  "data": {
+    "blogs": [
+      {
+        "_id": "68b351bb65c9ba13426b6145",
+        "title": "Getting Started with React",
+        "content": "React is a powerful JavaScript library for building user interfaces. In this tutorial, we will cover the fundamentals of React including components, props, and state management.",
+        "excerpt": "Learn the basics of React and build your first component.",
+        "author": "68b351ba65c9ba13426b6143",
+        "status": "approved",
+        "category": "Other",
+        "tags": [
+          "react",
+          "javascript",
+          "tutorial"
+        ],
+        "views": 150,
+        "featuredImage": "",
+        "isDraft": true,
+        "readTime": 5,
+        "series": {
+          "name": "",
+          "part": 0
+        },
+        "shares": 0,
+        "isPremium": false,
+        "isSponsored": false,
+        "scheduledAt": null,
+        "analytics": {
+          "avgReadTime": 0,
+          "bounceRate": 0,
+          "dailyViews": [],
+          "referrers": []
+        },
+        "likes": [
+          {
+            "user": "68b351ba65c9ba13426b6141",
+            "_id": "68b3537e0fcdf5d9492f74fe"
+          }
+        ],
+        "comments": [],
+        "tips": [],
+        "reports": [],
+        "createdAt": "2025-08-30T19:32:11.044Z",
+        "updatedAt": "2025-08-30T19:39:42.534Z",
+        "__v": 5
+      },
+      {
+        "_id": "68b351bb65c9ba13426b6147",
+        "title": "Node.js Best Practices",
+        "content": "Node.js is a runtime environment that allows you to run JavaScript on the server. Here are some best practices for building robust and scalable applications.",
+        "excerpt": "Essential tips for building scalable Node.js applications.",
+        "author": "68b351ba65c9ba13426b6143",
+        "status": "approved",
+        "category": "Other",
+        "tags": [
+          "nodejs",
+          "backend",
+          "javascript"
+        ],
+        "views": 200,
+        "featuredImage": "",
+        "isDraft": true,
+        "readTime": 8,
+        "series": {
+          "name": "",
+          "part": 0
+        },
+        "shares": 0,
+        "isPremium": false,
+        "isSponsored": false,
+        "scheduledAt": null,
+        "analytics": {
+          "avgReadTime": 0,
+          "bounceRate": 0,
+          "dailyViews": [],
+          "referrers": []
+        },
+        "likes": [
+          {
+            "user": "68b351ba65c9ba13426b6141",
+            "_id": "68b353360fcdf5d9492f74bf"
+          }
+        ],
+        "comments": [],
+        "tips": [],
+        "reports": [],
+        "createdAt": "2025-08-30T19:32:11.049Z",
+        "updatedAt": "2025-08-30T19:38:30.350Z",
+        "__v": 1
+      },
+      {
+        "_id": "68b351bb65c9ba13426b6149",
+        "title": "MongoDB Database Design",
+        "content": "MongoDB is a NoSQL database that stores data in flexible, JSON-like documents. This guide covers schema design patterns and best practices.",
+        "excerpt": "Learn how to design efficient MongoDB schemas.",
+        "author": "68b351ba65c9ba13426b6141",
+        "status": "approved",
+        "category": "Other",
+        "tags": [
+          "mongodb",
+          "database",
+          "nosql"
+        ],
+        "views": 120,
+        "featuredImage": "",
+        "isDraft": true,
+        "readTime": 6,
+        "series": {
+          "name": "",
+          "part": 0
+        },
+        "shares": 0,
+        "isPremium": false,
+        "isSponsored": false,
+        "scheduledAt": null,
+        "analytics": {
+          "avgReadTime": 0,
+          "bounceRate": 0,
+          "dailyViews": [],
+          "referrers": []
+        },
+        "likes": [
+          {
+            "user": "68b351ba65c9ba13426b6141",
+            "_id": "68b353740fcdf5d9492f74ea"
+          }
+        ],
+        "comments": [],
+        "tips": [],
+        "reports": [],
+        "createdAt": "2025-08-30T19:32:11.054Z",
+        "updatedAt": "2025-08-30T19:39:32.324Z",
+        "__v": 5
+      }
+    ],
+    "users": [
+      {
+        "_id": "68b351ba65c9ba13426b6141",
+        "username": "admin",
+        "email": "admin@devnote.com",
+        "role": "admin",
+        "avatar": "",
+        "bio": "",
+        "followers": [],
+        "following": [],
+        "newsletterSubscription": false,
+        "subscription": {
+          "plan": "free"
+        },
+        "earnings": {
+          "totalTips": 0,
+          "sponsoredPosts": 0,
+          "withdrawable": 0
+        },
+        "readingList": [],
+        "readingHistory": [],
+        "createdAt": "2025-08-30T19:32:10.065Z",
+        "updatedAt": "2025-08-30T19:32:10.065Z",
+        "__v": 0
+      },
+      {
+        "_id": "68b351ba65c9ba13426b6143",
+        "username": "johndoe",
+        "email": "john@example.com",
+        "role": "user",
+        "avatar": "",
+        "bio": "",
+        "followers": [],
+        "following": [],
+        "newsletterSubscription": false,
+        "subscription": {
+          "plan": "free"
+        },
+        "earnings": {
+          "totalTips": 0,
+          "sponsoredPosts": 0,
+          "withdrawable": 0
+        },
+        "readingList": [],
+        "readingHistory": [],
+        "createdAt": "2025-08-30T19:32:10.609Z",
+        "updatedAt": "2025-08-30T19:32:10.609Z",
+        "__v": 0
+      }
+    ]
+  }
+}

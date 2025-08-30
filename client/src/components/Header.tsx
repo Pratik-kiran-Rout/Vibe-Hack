@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -20,25 +21,28 @@ const Header: React.FC = () => {
           </Link>
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-white hover:text-blue-200 transition-colors">
+            <Link to="/" className="text-white hover:text-purple-200 transition-colors">
               Home
             </Link>
-            <Link to="/blogs" className="text-white hover:text-blue-200 transition-colors">
+            <Link to="/blogs" className="text-white hover:text-purple-200 transition-colors">
               Blogs
             </Link>
-            <Link to="/contact" className="text-white hover:text-blue-200 transition-colors">
+            <Link to="/contact" className="text-white hover:text-purple-200 transition-colors">
               Contact
             </Link>
           </div>
 
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             {user ? (
               <>
-
                 <Link to="/create" className="btn-primary">
                   Write Blog
                 </Link>
-                <Link to="/profile" className="text-white hover:text-blue-200">
+                <Link to="/offline-library" className="text-white hover:text-purple-200">
+                  Offline
+                </Link>
+                <Link to="/profile" className="text-white hover:text-purple-200">
                   {user.username}
                 </Link>
                 {user.role === 'admin' && (
@@ -48,14 +52,14 @@ const Header: React.FC = () => {
                 )}
                 <button
                   onClick={handleLogout}
-                  className="text-white hover:text-blue-200 transition-colors"
+                  className="text-white hover:text-purple-200 transition-colors"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-white hover:text-blue-200 transition-colors">
+                <Link to="/login" className="text-white hover:text-purple-200 transition-colors">
                   Login
                 </Link>
                 <Link to="/signup" className="btn-primary">

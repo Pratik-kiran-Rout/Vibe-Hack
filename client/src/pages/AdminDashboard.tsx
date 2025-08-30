@@ -88,44 +88,44 @@ const AdminDashboard: React.FC = () => {
     <div className="min-h-screen py-8 px-6">
       <div className="container mx-auto max-w-7xl">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
           <div className="flex gap-4">
             <button
               onClick={() => setActiveTab('blogs')}
-              className={`px-4 py-2 rounded-md font-medium ${
+              className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                 activeTab === 'blogs'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/10 text-white hover:bg-white/20'
+                  ? 'bg-purple-600 text-white border-purple-600'
+                  : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
               }`}
             >
               Blog Management
             </button>
             <button
               onClick={() => setActiveTab('analytics')}
-              className={`px-4 py-2 rounded-md font-medium ${
+              className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                 activeTab === 'analytics'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/10 text-white hover:bg-white/20'
+                  ? 'bg-purple-600 text-white border-purple-600'
+                  : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
               }`}
             >
               📊 Analytics
             </button>
             <button
               onClick={() => setActiveTab('users')}
-              className={`px-4 py-2 rounded-md font-medium ${
+              className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                 activeTab === 'users'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/10 text-white hover:bg-white/20'
+                  ? 'bg-purple-600 text-white border-purple-600'
+                  : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
               }`}
             >
               👥 Users
             </button>
             <button
               onClick={() => setActiveTab('reports')}
-              className={`px-4 py-2 rounded-md font-medium ${
+              className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                 activeTab === 'reports'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/10 text-white hover:bg-white/20'
+                  ? 'bg-purple-600 text-white border-purple-600'
+                  : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
               }`}
             >
               🚨 Reports
@@ -140,23 +140,23 @@ const AdminDashboard: React.FC = () => {
               <div className="grid md:grid-cols-5 gap-6 mb-8">
                 <div className="card text-center">
                   <div className="text-2xl font-bold text-blue-600">{stats.totalBlogs}</div>
-                  <div className="text-gray-600">Total Blogs</div>
+                  <div className="text-secondary">Total Blogs</div>
                 </div>
                 <div className="card text-center">
                   <div className="text-2xl font-bold text-yellow-600">{stats.pendingBlogs}</div>
-                  <div className="text-gray-600">Pending</div>
+                  <div className="text-secondary">Pending</div>
                 </div>
                 <div className="card text-center">
                   <div className="text-2xl font-bold text-green-600">{stats.approvedBlogs}</div>
-                  <div className="text-gray-600">Approved</div>
+                  <div className="text-secondary">Approved</div>
                 </div>
                 <div className="card text-center">
                   <div className="text-2xl font-bold text-red-600">{stats.rejectedBlogs}</div>
-                  <div className="text-gray-600">Rejected</div>
+                  <div className="text-secondary">Rejected</div>
                 </div>
                 <div className="card text-center">
                   <div className="text-2xl font-bold text-purple-600">{stats.totalUsers}</div>
-                  <div className="text-gray-600">Total Users</div>
+                  <div className="text-secondary">Total Users</div>
                 </div>
               </div>
             )}
@@ -169,10 +169,10 @@ const AdminDashboard: React.FC = () => {
                 <button
                   key={status}
                   onClick={() => setFilter(status)}
-                  className={`px-4 py-2 rounded-md font-medium ${
+                  className={`px-4 py-2 rounded-md font-medium transition-colors border ${
                     filter === status
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-purple-600 text-white border-purple-600'
+                      : 'bg-purple-400 text-white border-purple-400 hover:bg-purple-500'
                   }`}
                 >
                   {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -194,7 +194,7 @@ const AdminDashboard: React.FC = () => {
                   }}
                   className="rounded"
                 />
-                <span className="text-sm text-gray-600">Select All</span>
+                <span className="text-sm text-secondary">Select All</span>
               </label>
             )}
           </div>
@@ -203,7 +203,7 @@ const AdminDashboard: React.FC = () => {
           <div className="space-y-4">
             {blogs.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-600">No {filter} blogs found.</p>
+                <p className="text-secondary">No {filter} blogs found.</p>
               </div>
             ) : (
               blogs.map((blog) => (
@@ -223,16 +223,16 @@ const AdminDashboard: React.FC = () => {
                         className="rounded mt-1"
                       />
                       <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      <h3 className="text-lg font-semibold text-primary mb-2">
                         {blog.title}
                       </h3>
-                      <p className="text-gray-600 mb-3 line-clamp-2">{blog.excerpt}</p>
+                      <p className="text-secondary mb-3 line-clamp-2">{blog.excerpt}</p>
                       <div className="flex items-center gap-6 text-sm text-gray-500 mb-2">
                         <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">
                           {blog.category}
                         </span>
                       </div>
-                      <div className="flex items-center gap-6 text-sm text-gray-500">
+                      <div className="flex items-center gap-6 text-sm text-muted">
                         <span>👤 {blog.author.username}</span>
                         <span>📧 {blog.author.email}</span>
                         <span>📅 {new Date(blog.createdAt).toLocaleDateString()}</span>

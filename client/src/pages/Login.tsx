@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SocialLogin from '../components/SocialLogin';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -75,6 +76,20 @@ const Login: React.FC = () => {
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t" style={{borderColor: 'var(--border-color)'}}></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 text-secondary" style={{background: 'var(--bg-card)'}}>Or continue with</span>
+            </div>
+          </div>
+          <div className="mt-6">
+            <SocialLogin />
+          </div>
+        </div>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">

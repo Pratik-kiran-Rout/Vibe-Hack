@@ -285,14 +285,14 @@ const CreateBlog: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setEditorMode('rich')}
-                    className={`px-3 py-1 text-sm rounded ${editorMode === 'rich' ? 'bg-purple-600 text-white' : 'bg-gray-200'}`}
+                    className={`px-3 py-1 text-sm rounded transition-colors ${editorMode === 'rich' ? 'bg-purple-600 text-white' : 'bg-purple-400 text-white hover:bg-purple-500'}`}
                   >
                     Rich Editor
                   </button>
                   <button
                     type="button"
                     onClick={() => setEditorMode('markdown')}
-                    className={`px-3 py-1 text-sm rounded ${editorMode === 'markdown' ? 'bg-purple-600 text-white' : 'bg-gray-200'}`}
+                    className={`px-3 py-1 text-sm rounded transition-colors ${editorMode === 'markdown' ? 'bg-purple-600 text-white' : 'bg-purple-400 text-white hover:bg-purple-500'}`}
                   >
                     Markdown
                   </button>
@@ -324,7 +324,7 @@ const CreateBlog: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                     placeholder="Write your blog content in Markdown..."
                   />
-                  <div className="border border-gray-300 rounded-md p-3 bg-gray-50 overflow-auto max-h-96">
+                  <div className="border rounded-md p-3 overflow-auto max-h-96" style={{borderColor: 'var(--border-color)', background: 'var(--bg-surface)', color: 'var(--text-primary)'}}>
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {content || '*Preview will appear here...*'}
                     </ReactMarkdown>
