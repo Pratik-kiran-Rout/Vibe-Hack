@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface Blog {
   _id: string;
@@ -34,9 +34,7 @@ const Blogs: React.FC = () => {
         return;
       }
       
-      const response = await axios.post(`/api/blogs/${blogId}/like`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.post(`/api/blogs/${blogId}/like`);
       
       // Update like count locally without refetching
       setBlogs(prevBlogs => 
@@ -58,7 +56,7 @@ const Blogs: React.FC = () => {
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/blogs?page=${currentPage}&search=${search}&limit=9`);
+      const response = await api.get(`/api/blogs?page=${currentPage}&search=${search}&limit=9`);
       setBlogs(response.data.blogs);
       setTotalPages(response.data.totalPages);
     } catch (error) {

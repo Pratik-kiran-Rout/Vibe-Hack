@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import ShareButtons from '../components/ShareButtons';
 import FollowButton from '../components/FollowButton';
 import ReadingListButton from '../components/ReadingListButton';
@@ -49,12 +49,12 @@ const BlogPost: React.FC = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await axios.get(`/api/blogs/${id}`);
+        const response = await api.get(`/api/blogs/${id}`);
         setBlog(response.data);
         
         // Fetch series blogs if this blog is part of a series
         if (response.data.series?.name) {
-          const seriesResponse = await axios.get(`/api/social/series/${encodeURIComponent(response.data.series.name)}`);
+          const seriesResponse = await api.get(`/api/social/series/${encodeURIComponent(response.data.series.name)}`);
           setSeriesBlogs(seriesResponse.data);
         }
         
@@ -100,12 +100,12 @@ const BlogPost: React.FC = () => {
         if (readTime > 10) { // Only track if read for more than 10 seconds
           // Track reading history for logged-in users
           if (user) {
-            axios.post(`/api/search/reading-history/${blog._id}`, { readTime })
+            api.post(`/api/search/reading-history/${blog._id}`, { readTime })
               .catch(error => console.error('Failed to track reading history:', error));
           }
           
           // Track analytics for all users
-          axios.post(`/api/analytics/track-view/${blog._id}`, {
+          api.post(`/api/analytics/track-view/${blog._id}`, {
             referrer: document.referrer,
             readTime
           }).catch(error => console.error('Failed to track analytics:', error));
