@@ -16,18 +16,18 @@ const Header: React.FC = () => {
     <header className="fixed top-0 left-0 right-0 z-50 glass-effect">
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-white">
+          <Link to="/" className="text-2xl font-bold gradient-text">
             DevNote
           </Link>
           
           <div className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
-            <Link to="/" className="text-white hover:text-purple-200 transition-colors">
+            <Link to="/" className="text-primary hover:opacity-80 transition-colors font-medium">
               Home
             </Link>
-            <Link to="/blogs" className="text-white hover:text-purple-200 transition-colors">
+            <Link to="/blogs" className="text-primary hover:opacity-80 transition-colors font-medium">
               Blogs
             </Link>
-            <Link to="/contact" className="text-white hover:text-purple-200 transition-colors">
+            <Link to="/contact" className="text-primary hover:opacity-80 transition-colors font-medium">
               Contact
             </Link>
           </div>
@@ -39,27 +39,27 @@ const Header: React.FC = () => {
                 <Link to="/create" className="btn-primary">
                   Write Blog
                 </Link>
-                <Link to="/offline-library" className="text-white hover:text-purple-200">
+                <Link to="/offline-library" className="text-primary hover:opacity-80 font-medium">
                   Offline
                 </Link>
-                <Link to="/profile" className="text-white hover:text-purple-200">
+                <Link to="/profile" className="text-primary hover:opacity-80 font-medium">
                   {user.username}
                 </Link>
                 {user.role === 'admin' && (
-                  <Link to="/admin" className="text-yellow-300 hover:text-yellow-100">
+                  <Link to="/admin" className="text-yellow-500 hover:text-yellow-400 font-medium">
                     Admin
                   </Link>
                 )}
                 <button
                   onClick={handleLogout}
-                  className="text-white hover:text-purple-200 transition-colors"
+                  className="text-primary hover:opacity-80 transition-colors font-medium"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-white hover:text-purple-200 transition-colors">
+                <Link to="/login" className="text-primary hover:opacity-80 transition-colors font-medium">
                   Login
                 </Link>
                 <Link to="/signup" className="btn-primary">

@@ -2,12 +2,12 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: 'https://vibe-hack-b.onrender.com',
-  withCredentials: false, // Disable for CORS issues
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 second timeout
+  timeout: 10000,
 });
 
 // Add request interceptor to include auth token

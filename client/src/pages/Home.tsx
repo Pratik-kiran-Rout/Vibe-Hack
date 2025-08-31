@@ -97,10 +97,10 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section className="py-20 px-6">
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold text-primary mb-6">
             Welcome to <span className="gradient-text">DevNote</span>
           </h1>
-          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-secondary mb-8 max-w-2xl mx-auto">
             Discover amazing stories, insights, and knowledge from our community of writers.
             Share your thoughts and connect with like-minded individuals.
           </p>
@@ -108,7 +108,7 @@ const Home: React.FC = () => {
             <Link to="/blogs" className="btn-primary">
               Explore Blogs
             </Link>
-            <Link to="/signup" className="px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-purple-600 transition-all duration-300 font-medium">
+            <Link to="/signup" className="px-6 py-3 bg-transparent border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-all duration-300 font-medium">
               Join Community
             </Link>
           </div>
@@ -118,7 +118,7 @@ const Home: React.FC = () => {
       {/* Latest Blogs */}
       <section className="py-16 px-6">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">Latest Blogs</h2>
+          <h2 className="text-3xl font-bold text-primary mb-8 text-center">Latest Blogs</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {latestBlogs.map((blog) => (
               <div key={blog._id} className="card hover:transform hover:scale-105 transition-all duration-300">
@@ -158,7 +158,7 @@ const Home: React.FC = () => {
       {/* Trending Blogs */}
       <section className="py-16 px-6 bg-white/10">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">Trending Now</h2>
+          <h2 className="text-3xl font-bold text-primary mb-8 text-center">Trending Now</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {trendingBlogs.map((blog, index) => (
               <div key={blog._id} className="card">
@@ -192,7 +192,7 @@ const Home: React.FC = () => {
       {/* Features */}
       <section className="py-16 px-6">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-white mb-12 text-center">Why Choose DevNote?</h2>
+          <h2 className="text-3xl font-bold text-primary mb-12 text-center">Why Choose DevNote?</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="card text-center">
               <div className="text-4xl mb-4">✍️</div>

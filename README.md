@@ -93,6 +93,7 @@
 - Node.js (v16 or higher)
 - MongoDB (local or MongoDB Atlas)
 - Git
+- Windows (for batch scripts) or compatible terminal
 
 ### Installation
 
@@ -125,15 +126,24 @@ Create `client/.env`:
 REACT_APP_API_URL=http://localhost:5000
 ```
 
-4. **Seed the database (optional)**
+4. **Verify setup (optional)**
 ```bash
-cd server
-npm run seed
+node verify-setup.js
 ```
 
 5. **Start the application**
 ```bash
+# Option 1: Use npm scripts
 npm run dev
+
+# Option 2: Use Windows batch file
+start-dev.bat
+
+# Option 3: Manual start
+# Terminal 1:
+cd server && npm run dev
+# Terminal 2:
+cd client && npm start
 ```
 
 ### 🌐 Access Points
