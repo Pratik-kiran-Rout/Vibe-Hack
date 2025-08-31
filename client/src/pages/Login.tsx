@@ -34,7 +34,7 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="card max-w-md w-full">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Welcome Back</h2>
+        <h2 className="text-3xl font-bold text-center text-primary mb-8">Welcome Back</h2>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -44,7 +44,7 @@ const Login: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-primary mb-2">
               Email Address
             </label>
             <input
@@ -53,13 +53,13 @@ const Login: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 bg-surface border border-color rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-primary"
               placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-primary mb-2">
               Password
             </label>
             <input
@@ -68,7 +68,7 @@ const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 bg-surface border border-color rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-primary"
               placeholder="Enter your password"
             />
           </div>
@@ -97,7 +97,7 @@ const Login: React.FC = () => {
         </div>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600">
+          <p className="text-secondary">
             Don't have an account?{' '}
             <Link to="/signup" className="text-purple-600 hover:text-purple-800 font-medium">
               Sign up here
@@ -105,13 +105,12 @@ const Login: React.FC = () => {
           </p>
         </div>
 
-        <div className="mt-6 p-4 card">
+        <div className="mt-6 p-4" style={{background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: '0.5rem'}}>
           <div className="text-center">
-            <div className="text-lg mb-2">🚀 <span className="font-semibold text-primary">Quick Demo Access</span></div>
-            <div className="text-sm text-secondary space-y-1">
+            <div className="text-lg mb-2" style={{color: 'var(--text-primary)'}}>🚀 <span className="font-semibold">Quick Demo Access</span></div>
+            <div className="text-sm space-y-1" style={{color: 'var(--text-secondary)'}}>
               <div><strong>Admin:</strong> admin@devnote.com / admin123</div>
-              <div><strong>User:</strong> sarah@devnote.com / password123</div>
-              <div className="text-xs text-muted mt-2">Or create your own account above!</div>
+              <div className="text-xs mt-2" style={{color: 'var(--text-muted)'}}>Or create your own account above!</div>
             </div>
           </div>
         </div>
