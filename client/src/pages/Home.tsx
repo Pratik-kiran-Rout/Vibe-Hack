@@ -23,6 +23,34 @@ const Home: React.FC = () => {
   const [trendingBlogs, setTrendingBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const handleLike = async (blogId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const response = await api.post(`/api/blogs/${blogId}/like`);
+      
+      // Update like count in both arrays
+      setLatestBlogs(prevBlogs => 
+        prevBlogs.map(blog => 
+          blog._id === blogId 
+            ? { ...blog, likes: Array(response.data.likes).fill(null) }
+            : blog
+        )
+      );
+      setTrendingBlogs(prevBlogs => 
+        prevBlogs.map(blog => 
+          blog._id === blogId 
+            ? { ...blog, likes: Array(response.data.likes).fill(null) }
+            : blog
+        )
+      );
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        alert('Please login to like blogs');
+      }
+    }
+  };
+
   useEffect(() => {
     // SEO optimization for home page
     updateMetaTags({
@@ -80,7 +108,7 @@ const Home: React.FC = () => {
             <Link to="/blogs" className="btn-primary">
               Explore Blogs
             </Link>
-            <Link to="/signup" className="btn-primary bg-transparent border-2 border-white text-white hover:bg-white hover:text-purple-600">
+            <Link to="/signup" className="px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-purple-600 transition-all duration-300 font-medium">
               Join Community
             </Link>
           </div>
@@ -108,7 +136,12 @@ const Home: React.FC = () => {
                   <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
                   <div className="flex items-center gap-4">
                     <span>👁 {blog.views}</span>
-                    <span>❤️ {blog.likes.length}</span>
+                    <button 
+                      onClick={(e) => handleLike(blog._id, e)}
+                      className="flex items-center gap-1 hover:text-red-500 transition-colors"
+                    >
+                      ❤️ {blog.likes.length}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -140,7 +173,12 @@ const Home: React.FC = () => {
                     <p className="text-sm mb-2 text-secondary">{blog.excerpt?.substring(0, 100) || 'No excerpt available'}...</p>
                     <div className="flex items-center gap-4 text-xs text-muted">
                       <span>👁 {blog.views}</span>
-                      <span>❤️ {blog.likes.length}</span>
+                      <button 
+                        onClick={(e) => handleLike(blog._id, e)}
+                        className="flex items-center gap-1 hover:text-red-500 transition-colors"
+                      >
+                        ❤️ {blog.likes.length}
+                      </button>
                       <span>By {blog.author.username}</span>
                     </div>
                   </div>

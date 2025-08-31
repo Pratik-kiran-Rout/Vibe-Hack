@@ -28,15 +28,9 @@ const Blogs: React.FC = () => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Please login to like blogs');
-        return;
-      }
-      
       const response = await api.post(`/api/blogs/${blogId}/like`);
       
-      // Update like count locally without refetching
+      // Update like count locally
       setBlogs(prevBlogs => 
         prevBlogs.map(blog => 
           blog._id === blogId 
@@ -46,6 +40,9 @@ const Blogs: React.FC = () => {
       );
     } catch (error) {
       console.error('Error liking blog:', error);
+      if (error.response?.status === 401) {
+        alert('Please login to like blogs');
+      }
     }
   };
 

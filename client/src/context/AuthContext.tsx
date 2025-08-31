@@ -52,7 +52,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser(response.data.user);
           setToken(storedToken);
         } catch (error) {
+          console.error('Auth check failed:', error);
           localStorage.removeItem('token');
+          setToken(null);
+          setUser(null);
         }
       }
       setLoading(false);

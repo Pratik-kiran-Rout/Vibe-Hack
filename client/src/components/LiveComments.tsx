@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
+import api from '../utils/api';
 
 interface Comment {
   _id: string;
@@ -18,41 +18,29 @@ interface LiveCommentsProps {
 }
 
 const LiveComments: React.FC<LiveCommentsProps> = ({ blogId, initialComments }) => {
-  const { socket } = useSocket();
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (socket) {
-      socket.emit('join_blog', blogId);
-
-      socket.on('comment_added', (data) => {
-        if (data.blogId === blogId) {
-          setComments(prev => [...prev, data.comment]);
-        }
-      });
-
-      return () => {
-        socket.emit('leave_blog', blogId);
-        socket.off('comment_added');
-      };
-    }
-  }, [socket, blogId]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim() || !socket || !user) return;
+    if (!newComment.trim() || !user) return;
 
     setIsSubmitting(true);
-    socket.emit('new_comment', {
-      blogId,
-      content: newComment.trim()
-    });
-
-    setNewComment('');
-    setIsSubmitting(false);
+    try {
+      const response = await api.post(`/api/blogs/${blogId}/comment`, {
+        text: newComment.trim()
+      });
+      
+      setComments(prev => [...prev, response.data]);
+      setNewComment('');
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      alert('Failed to post comment. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

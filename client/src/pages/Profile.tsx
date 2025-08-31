@@ -26,6 +26,8 @@ const Profile: React.FC = () => {
   const [drafts, setDrafts] = useState<Blog[]>([]);
   const [activeTab, setActiveTab] = useState<'published' | 'drafts' | 'analytics' | 'earnings' | 'tools'>('published');
   const [loading, setLoading] = useState(true);
+  const [editingBio, setEditingBio] = useState(false);
+  const [newBio, setNewBio] = useState(user?.bio || '');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -78,7 +80,53 @@ const Profile: React.FC = () => {
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-800 mb-2">{user?.username}</h1>
               <p className="text-gray-600 mb-4">{user?.email}</p>
-              {user?.bio && <p className="text-gray-700">{user.bio}</p>}
+              {editingBio ? (
+                <div className="mb-4">
+                  <textarea
+                    value={newBio}
+                    onChange={(e) => setNewBio(e.target.value)}
+                    placeholder="Tell us about yourself..."
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    rows={3}
+                    maxLength={500}
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={async () => {
+                        try {
+                          await api.put('/api/auth/profile', { bio: newBio });
+                          setEditingBio(false);
+                          window.location.reload();
+                        } catch (error) {
+                          console.error('Error updating bio:', error);
+                        }
+                      }}
+                      className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingBio(false);
+                        setNewBio(user?.bio || '');
+                      }}
+                      className="px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm hover:bg-gray-400"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <p className="text-gray-700 mb-2">{user?.bio || 'No bio yet. Click edit to add one!'}</p>
+                  <button
+                    onClick={() => setEditingBio(true)}
+                    className="text-purple-600 hover:text-purple-800 text-sm"
+                  >
+                    ✏️ Edit Bio
+                  </button>
+                </div>
+              )}
               <div className="flex items-center gap-4 mt-4">
                 <span className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">
                   {user?.role === 'admin' ? '👑 Admin' : '✍️ Writer'}

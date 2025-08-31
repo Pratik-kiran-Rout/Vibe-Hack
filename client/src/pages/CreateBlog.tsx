@@ -86,7 +86,7 @@ const CreateBlog: React.FC = () => {
         await api.put(`/api/blogs/${id}`, blogData);
       } else {
         const response = await api.post('/api/blogs', blogData);
-        if (!id) {
+        if (response.data._id) {
           window.history.replaceState(null, '', `/create/${response.data._id}`);
         }
       }
@@ -108,9 +108,10 @@ const CreateBlog: React.FC = () => {
       const response = await api.post('/api/upload/image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setFeaturedImage(response.data.imageUrl);
-    } catch (error) {
-      setError('Failed to upload image');
+      setFeaturedImage(response.data.imageUrl || response.data.url);
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      setError(error.response?.data?.message || 'Failed to upload image');
     }
   };
 
@@ -130,7 +131,8 @@ const CreateBlog: React.FC = () => {
         category,
         featuredImage,
         series: seriesName ? { name: seriesName, part: seriesPart } : undefined,
-        isDraft: !publish
+        isDraft: !publish,
+        status: publish ? 'approved' : 'draft'
       };
 
       if (id) {

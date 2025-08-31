@@ -20,7 +20,7 @@ const Header: React.FC = () => {
             DevNote
           </Link>
           
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
             <Link to="/" className="text-white hover:text-purple-200 transition-colors">
               Home
             </Link>
