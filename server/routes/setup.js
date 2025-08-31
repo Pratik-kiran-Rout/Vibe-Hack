@@ -208,4 +208,88 @@ router.get('/create-blogs', async (req, res) => {
   }
 });
 
+// Direct seed route - guaranteed to work
+router.get('/direct-seed', async (req, res) => {
+  try {
+    // Clear existing blogs
+    await Blog.deleteMany({});
+    
+    // Create a simple user
+    let user = await User.findOne({ email: 'demo@devnote.com' });
+    if (!user) {
+      user = new User({
+        username: 'demo_user',
+        email: 'demo@devnote.com', 
+        password: await bcrypt.hash('password123', 12),
+        role: 'user',
+        bio: 'Demo user for sample blogs'
+      });
+      await user.save();
+    }
+
+    // Create blogs directly
+    const blogs = [
+      {
+        title: "Welcome to DevNote Platform",
+        content: "# Welcome to DevNote!\n\nThis is your developer blogging platform. Start sharing your knowledge and connect with the community.\n\n## Features\n\n- Write in Markdown\n- Share with developers\n- Build your audience\n\nHappy blogging!",
+        excerpt: "Welcome to DevNote - your developer blogging platform!",
+        author: user._id,
+        category: "Other",
+        tags: ["welcome", "platform"],
+        status: "approved",
+        readTime: 2,
+        views: 50,
+        shares: 3,
+        likes: [],
+        comments: []
+      },
+      {
+        title: "JavaScript Tips for Better Code",
+        content: "# JavaScript Tips\n\nImprove your JavaScript with these essential tips:\n\n## Use const and let\n\n```javascript\nconst name = 'DevNote';\nlet count = 0;\n```\n\n## Arrow Functions\n\n```javascript\nconst greet = name => `Hello, ${name}!`;\n```\n\n## Destructuring\n\n```javascript\nconst { title, author } = blog;\n```\n\nThese tips will make your code cleaner and more maintainable!",
+        excerpt: "Essential JavaScript tips to write better, cleaner code.",
+        author: user._id,
+        category: "Programming",
+        tags: ["javascript", "tips", "coding"],
+        status: "approved",
+        readTime: 4,
+        views: 125,
+        shares: 7,
+        likes: [],
+        comments: []
+      },
+      {
+        title: "React Components Best Practices",
+        content: "# React Best Practices\n\nBuild better React components with these practices:\n\n## Functional Components\n\n```jsx\nfunction BlogCard({ title, excerpt }) {\n  return (\n    <div className=\"card\">\n      <h3>{title}</h3>\n      <p>{excerpt}</p>\n    </div>\n  );\n}\n```\n\n## Custom Hooks\n\n```jsx\nfunction useBlog(id) {\n  const [blog, setBlog] = useState(null);\n  // Hook logic here\n  return blog;\n}\n```\n\nFollow these patterns for maintainable React code!",
+        excerpt: "Learn React best practices for building maintainable components.",
+        author: user._id,
+        category: "Web Development",
+        tags: ["react", "components", "frontend"],
+        status: "approved",
+        readTime: 6,
+        views: 89,
+        shares: 5,
+        likes: [],
+        comments: []
+      }
+    ];
+
+    // Insert blogs
+    const createdBlogs = await Blog.insertMany(blogs);
+    
+    res.json({
+      success: true,
+      message: 'Direct seed completed successfully!',
+      user: user.username,
+      blogs: createdBlogs.length,
+      blogTitles: createdBlogs.map(b => b.title)
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Direct seed failed',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
