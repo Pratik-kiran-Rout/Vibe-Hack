@@ -52,20 +52,24 @@ const Blogs: React.FC = () => {
     }
   };
 
+  // Fetch blogs on page load and filter changes
   useEffect(() => {
     fetchBlogs();
-  }, [currentPage, search, category, sortBy]);
+  }, [currentPage, category, sortBy]);
 
-  // Real-time search with debounce (only after 3+ characters)
+  // Search with debounce
   useEffect(() => {
     const timer = setTimeout(() => {
       if (search.length >= 3) {
+        console.log('Triggering search for:', search);
         setCurrentPage(1);
         fetchBlogs();
       } else if (search.length === 0) {
+        console.log('Clearing search');
+        setCurrentPage(1);
         fetchBlogs();
       }
-    }, 500); // Increased delay to 500ms
+    }, 300); // Reduced delay
 
     return () => clearTimeout(timer);
   }, [search]);
@@ -79,14 +83,23 @@ const Blogs: React.FC = () => {
         sort: sortBy
       });
       
-      if (search) params.append('search', search);
+      if (search && search.length >= 3) {
+        params.append('search', search);
+        console.log('Searching for:', search);
+      }
       if (category) params.append('category', category);
       
-      const response = await api.get(`/api/blogs?${params}`);
-      setBlogs(response.data.blogs);
-      setTotalPages(response.data.totalPages);
+      const url = `/api/blogs?${params}`;
+      console.log('Fetching blogs from:', url);
+      
+      const response = await api.get(url);
+      console.log('Search response:', response.data);
+      
+      setBlogs(response.data.blogs || []);
+      setTotalPages(response.data.totalPages || 1);
     } catch (error) {
       console.error('Error fetching blogs:', error);
+      setBlogs([]);
     } finally {
       setLoading(false);
     }
@@ -131,6 +144,15 @@ const Blogs: React.FC = () => {
                 className="px-6 py-3 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
               >
                 🔍 Filters
+              </button>
+              <button 
+                onClick={() => {
+                  console.log('Manual search test with:', search);
+                  fetchBlogs();
+                }}
+                className="px-4 py-3 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
+              >
+                Test Search
               </button>
             </div>
             

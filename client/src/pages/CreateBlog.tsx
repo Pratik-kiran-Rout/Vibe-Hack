@@ -144,17 +144,11 @@ const CreateBlog: React.FC = () => {
         setFeaturedImage(imageUrl);
         setError(''); // Clear any previous errors
       } else {
-        throw new Error('No image URL returned from server');
+        setError('Server did not return image URL');
       }
     } catch (error: any) {
       console.error('Upload error:', error);
-      // Fallback: create a data URL for preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFeaturedImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-      setError('Image uploaded locally (server upload failed)');
+      setError('Image upload failed. Please try again or continue without image.');
     }
   };
 
@@ -193,7 +187,8 @@ const CreateBlog: React.FC = () => {
         category,
         featuredImage,
         series: seriesName ? { name: seriesName, part: seriesPart } : { name: '', part: 0 },
-        isDraft: !publish
+        isDraft: !publish,
+        status: publish ? 'approved' : 'draft'
       };
 
       let response;

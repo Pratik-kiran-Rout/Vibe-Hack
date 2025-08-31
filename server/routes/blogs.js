@@ -17,10 +17,18 @@ router.get('/', async (req, res) => {
     const category = req.query.category || '';
     const sort = req.query.sort || 'createdAt';
 
+    console.log('Blog search request:', { page, limit, search, category, sort });
+
     let query = { status: 'approved' };
     
     if (search) {
-      query.$text = { $search: search };
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { excerpt: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } },
+        { tags: { $in: [new RegExp(search, 'i')] } }
+      ];
+      console.log('Search query:', JSON.stringify(query, null, 2));
     }
     
     if (tag) {
@@ -40,13 +48,17 @@ router.get('/', async (req, res) => {
 
     const total = await Blog.countDocuments(query);
 
+    console.log(`Found ${blogs.length} blogs out of ${total} total`);
+
     res.json({
       blogs,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
-      total
+      total,
+      searchTerm: search // Add for debugging
     });
   } catch (error) {
+    console.error('Blog search error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
@@ -176,7 +188,19 @@ router.put('/:id', auth, [
     if (series) updateData.series = series;
     if (isDraft !== undefined) {
       updateData.isDraft = isDraft;
-      updateData.status = isDraft ? 'draft' : (content && excerpt ? 'pending' : 'draft');
+      if (!isDraft && content && excerpt) {
+        // Publishing the blog
+        updateData.status = 'approved'; // Auto-approve for now
+      } else if (isDraft) {
+        // Saving as draft
+        updateData.status = 'draft';
+      }
+    }
+    
+    // Handle explicit status updates
+    if (req.body.status) {
+      updateData.status = req.body.status;
+      updateData.isDraft = req.body.status === 'draft';
     }
 
     const updatedBlog = await Blog.findByIdAndUpdate(

@@ -25,37 +25,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isConnected, setIsConnected] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
+  // Disable socket.io for now to prevent connection errors
   useEffect(() => {
-    if (user && token) {
-      const newSocket = io(process.env.REACT_APP_SERVER_URL || 'http://localhost:5000', {
-        auth: { token }
-      });
-
-      newSocket.on('connect', () => {
-        setIsConnected(true);
-        console.log('Connected to server');
-      });
-
-      newSocket.on('disconnect', () => {
-        setIsConnected(false);
-        console.log('Disconnected from server');
-      });
-
-      newSocket.on('notification', (notification) => {
-        const newNotification: Notification = {
-          id: Date.now().toString(),
-          ...notification,
-          timestamp: new Date()
-        };
-        setNotifications(prev => [newNotification, ...prev].slice(0, 10));
-      });
-
-      setSocket(newSocket);
-
-      return () => {
-        newSocket.close();
-      };
-    }
+    // Socket.io disabled - using REST API only
+    console.log('Socket.io disabled - using REST API for all communications');
   }, [user, token]);
 
   const clearNotifications = () => {
