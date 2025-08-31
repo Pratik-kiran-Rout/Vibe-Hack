@@ -8,7 +8,18 @@ const compression = require('compression');
 const morgan = require('morgan');
 require('dotenv').config();
 
+// Validate critical environment variables
+if (!process.env.MONGODB_URI || process.env.MONGODB_URI.includes('localhost')) {
+  console.error('⚠️ WARNING: Using localhost MongoDB - data will not persist!');
+  console.log('Please set MONGODB_URI to a proper MongoDB Atlas connection string');
+}
+
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  console.error('⚠️ WARNING: JWT_SECRET is too short or missing!');
+}
+
 const { apiLimiter, authLimiter } = require('./middleware/rateLimiter');
+const { ensureDataExists, startPeriodicCheck } = require('./middleware/dataCheck');
 const { handleConnection } = require('./socket/socketHandler');
 const { scheduleBackups } = require('./utils/backup');
 
@@ -48,6 +59,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static('uploads'));
 app.use('/api/', apiLimiter);
 app.use('/api/auth/', authLimiter);
+
+// Auto-restore data if database is empty
+app.use(ensureDataExists);
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -92,16 +106,56 @@ app.get('/sitemap.xml', async (req, res) => {
   }
 });
 
-// MongoDB connection
+// MongoDB connection with better error handling
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB connection error:', err));
+  .then(() => {
+    console.log('MongoDB connected successfully');
+    console.log('Database:', process.env.MONGODB_URI?.split('@')[1]?.split('/')[0] || 'Unknown');
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    // Don't exit, let the app run without DB for debugging
+  });
+
+// Handle MongoDB connection events
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB runtime error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
 
 // Initialize real-time features
 handleConnection(io);
 
 // Initialize backup system
 scheduleBackups();
+
+// Start periodic data monitoring
+startPeriodicCheck();
+console.log('🔍 Started periodic data monitoring (every 30 minutes)');
+
+// Auto-seed data on startup if needed
+setTimeout(async () => {
+  try {
+    const mongoose = require('mongoose');
+    const Blog = require('./models/Blog');
+    const User = require('./models/User');
+    
+    if (mongoose.connection.readyState === 1) {
+      const blogCount = await Blog.countDocuments();
+      if (blogCount === 0) {
+        console.log('🌱 Auto-seeding database on startup...');
+        // Trigger auto-restore
+        const response = await fetch(`http://localhost:${process.env.PORT || 5000}/api/setup/create-many-blogs`);
+        console.log('✅ Auto-seed completed');
+      }
+    }
+  } catch (error) {
+    console.log('Auto-seed skipped:', error.message);
+  }
+}, 5000); // Wait 5 seconds after startup
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

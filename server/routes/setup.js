@@ -259,4 +259,204 @@ router.get('/seed-blogs', async (req, res) => {
   }
 });
 
+// Database status check
+router.get('/db-status', async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    const blogCount = await Blog.countDocuments();
+    
+    res.json({
+      success: true,
+      database: 'connected',
+      users: userCount,
+      blogs: blogCount,
+      message: userCount === 0 ? 'Database is empty - need to seed data' : 'Database has data'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      database: 'error',
+      error: error.message
+    });
+  }
+});
+
+// Force data restore (always works)
+router.get('/force-restore', async (req, res) => {
+  try {
+    // Always restore data regardless of existing data
+    console.log('🚑 Force restore initiated...');
+    
+    // Create/update users
+    const userData = [
+      { username: 'devnote_admin', email: 'admin@devnote.com', role: 'admin', bio: 'Platform Administrator' },
+      { username: 'sarah_dev', email: 'sarah@devnote.com', role: 'user', bio: 'Full-stack developer' },
+      { username: 'mike_coder', email: 'mike@devnote.com', role: 'user', bio: 'Backend engineer' },
+      { username: 'alex_ui', email: 'alex@devnote.com', role: 'user', bio: 'Frontend specialist' }
+    ];
+
+    const users = [];
+    for (const data of userData) {
+      let user = await User.findOne({ email: data.email });
+      if (!user) {
+        user = new User({ ...data, password: 'password123' });
+        await user.save();
+      }
+      users.push(user);
+    }
+
+    // Always create fresh blogs
+    await Blog.deleteMany({}); // Clear existing
+    
+    const freshBlogs = [
+      {
+        title: "DevNote Platform - Always Available",
+        content: "# DevNote Platform\n\nYour reliable developer blogging platform with auto-restore functionality!\n\n## Features\n- Automatic data persistence\n- Real-time monitoring\n- Always available content\n\nNever lose your data again!",
+        excerpt: "DevNote platform with automatic data persistence and monitoring.",
+        author: users[0]._id,
+        category: "Other",
+        tags: ["platform", "reliable"],
+        status: "approved",
+        readTime: 3,
+        views: 50
+      },
+      {
+        title: "React Development Best Practices 2024",
+        content: "# React Best Practices\n\n## Modern Patterns\n```jsx\nfunction MyComponent() {\n  const [state, setState] = useState();\n  \n  useEffect(() => {\n    // Effects here\n  }, []);\n  \n  return <div>Content</div>;\n}\n```\n\n## Key Points\n- Use functional components\n- Custom hooks for logic\n- Proper state management",
+        excerpt: "Modern React development patterns and best practices for 2024.",
+        author: users[1]._id,
+        category: "Programming",
+        tags: ["react", "javascript", "2024"],
+        status: "approved",
+        readTime: 8,
+        views: 245
+      },
+      {
+        title: "Building Scalable Node.js Applications",
+        content: "# Scalable Node.js\n\n## Architecture\n```javascript\nconst express = require('express');\nconst app = express();\n\n// Middleware\napp.use(express.json());\napp.use(cors());\n\n// Routes\napp.get('/api/health', (req, res) => {\n  res.json({ status: 'OK' });\n});\n```\n\n## Scaling Tips\n- Use clustering\n- Implement caching\n- Database optimization",
+        excerpt: "Learn to build and scale Node.js applications for production use.",
+        author: users[2]._id,
+        category: "Programming",
+        tags: ["nodejs", "scalability", "backend"],
+        status: "approved",
+        readTime: 12,
+        views: 189
+      },
+      {
+        title: "Modern CSS Techniques",
+        content: "# Modern CSS\n\n## Grid Layout\n```css\n.container {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\n  gap: 2rem;\n}\n```\n\n## Flexbox\n```css\n.flex-container {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n```\n\n## CSS Variables\n```css\n:root {\n  --primary-color: #6C63FF;\n  --secondary-color: #9D4EDD;\n}\n```",
+        excerpt: "Master modern CSS with Grid, Flexbox, and CSS variables.",
+        author: users[3]._id,
+        category: "Web Development",
+        tags: ["css", "modern", "layout"],
+        status: "approved",
+        readTime: 7,
+        views: 167
+      },
+      {
+        title: "JavaScript Performance Optimization",
+        content: "# JS Performance\n\n## Optimization Techniques\n```javascript\n// Debouncing\nconst debounce = (func, wait) => {\n  let timeout;\n  return function executedFunction(...args) {\n    const later = () => {\n      clearTimeout(timeout);\n      func(...args);\n    };\n    clearTimeout(timeout);\n    timeout = setTimeout(later, wait);\n  };\n};\n\n// Memoization\nconst memoize = (fn) => {\n  const cache = {};\n  return (...args) => {\n    const key = JSON.stringify(args);\n    if (cache[key]) return cache[key];\n    cache[key] = fn(...args);\n    return cache[key];\n  };\n};\n```",
+        excerpt: "Optimize JavaScript performance with debouncing, memoization, and more.",
+        author: users[1]._id,
+        category: "Programming",
+        tags: ["javascript", "performance", "optimization"],
+        status: "approved",
+        readTime: 10,
+        views: 203
+      }
+    ];
+
+    await Blog.insertMany(freshBlogs);
+    
+    res.json({
+      success: true,
+      message: 'Force restore completed!',
+      users: users.length,
+      blogs: freshBlogs.length,
+      note: 'Data will auto-restore if lost again'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Force restore failed',
+      error: error.message
+    });
+  }
+});
+
+// Emergency data restore
+router.get('/emergency-restore', async (req, res) => {
+  try {
+    // Check if data exists
+    const blogCount = await Blog.countDocuments();
+    if (blogCount > 0) {
+      return res.json({ message: 'Data already exists', blogs: blogCount });
+    }
+
+    // Create emergency user and blogs
+    let user = await User.findOne({ email: 'emergency@devnote.com' });
+    if (!user) {
+      user = new User({
+        username: 'emergency_user',
+        email: 'emergency@devnote.com',
+        password: 'password123',
+        bio: 'Emergency restored user'
+      });
+      await user.save();
+    }
+
+    // Create 3 quick blogs
+    const quickBlogs = [
+      {
+        title: "Welcome Back to DevNote",
+        content: "# Data Restored\n\nYour DevNote platform is back online! All systems are working properly.",
+        excerpt: "DevNote platform restored and ready to use.",
+        author: user._id,
+        category: "Other",
+        tags: ["welcome"],
+        status: "approved",
+        readTime: 1,
+        views: 5
+      },
+      {
+        title: "Quick JavaScript Tips",
+        content: "# JS Tips\n\n```javascript\nconst tips = ['Use const/let', 'Arrow functions', 'Template literals'];\n```",
+        excerpt: "Essential JavaScript tips for developers.",
+        author: user._id,
+        category: "Programming",
+        tags: ["javascript"],
+        status: "approved",
+        readTime: 3,
+        views: 15
+      },
+      {
+        title: "React Best Practices",
+        content: "# React Guide\n\nBuild better React apps with these practices:\n\n- Use functional components\n- Custom hooks\n- Proper state management",
+        excerpt: "Learn React best practices for better applications.",
+        author: user._id,
+        category: "Web Development",
+        tags: ["react"],
+        status: "approved",
+        readTime: 5,
+        views: 25
+      }
+    ];
+
+    await Blog.insertMany(quickBlogs);
+    
+    res.json({
+      success: true,
+      message: 'Emergency data restored!',
+      user: user.username,
+      blogs: quickBlogs.length
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Emergency restore failed',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
