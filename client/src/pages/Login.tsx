@@ -16,11 +16,16 @@ const Login: React.FC = () => {
     setError('');
     setLoading(true);
 
+    console.log('Login attempt:', { email, password: '***' });
+
     try {
       await login(email, password);
+      console.log('Login successful');
       navigate('/');
     } catch (err: any) {
-      setError(err.message);
+      console.error('Login error:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Login failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -56,16 +56,16 @@ const Blogs: React.FC = () => {
     fetchBlogs();
   }, [currentPage, search, category, sortBy]);
 
-  // Real-time search with debounce
+  // Real-time search with debounce (only after 3+ characters)
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (search.length >= 1) {
+      if (search.length >= 3) {
         setCurrentPage(1);
         fetchBlogs();
       } else if (search.length === 0) {
         fetchBlogs();
       }
-    }, 300);
+    }, 500); // Increased delay to 500ms
 
     return () => clearTimeout(timer);
   }, [search]);
@@ -123,8 +123,8 @@ const Blogs: React.FC = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search blogs... (start typing for instant results)"
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Search blogs... (type 3+ characters to search)"
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900"
               />
               <button 
                 onClick={() => setShowFilters(!showFilters)}
@@ -136,32 +136,32 @@ const Blogs: React.FC = () => {
             
             {/* Filters */}
             {showFilters && (
-              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <div className="grid md:grid-cols-3 gap-4">
+              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-lg">
+                <div className="grid md:grid-cols-3 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-gray-800 mb-2">Category</label>
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900"
                     >
-                      <option value="">All Categories</option>
+                      <option value="" className="text-gray-900">All Categories</option>
                       {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
+                        <option key={cat} value={cat} className="text-gray-900">{cat}</option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <label className="block text-sm font-medium text-gray-800 mb-2">Sort By</label>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900"
                     >
-                      <option value="createdAt">Latest</option>
-                      <option value="views">Most Viewed</option>
-                      <option value="likes">Most Liked</option>
-                      <option value="title">Alphabetical</option>
+                      <option value="createdAt" className="text-gray-900">Latest</option>
+                      <option value="views" className="text-gray-900">Most Viewed</option>
+                      <option value="likes" className="text-gray-900">Most Liked</option>
+                      <option value="title" className="text-gray-900">Alphabetical</option>
                     </select>
                   </div>
                   <div className="flex items-end">
@@ -172,7 +172,7 @@ const Blogs: React.FC = () => {
                         setSortBy('createdAt');
                         setCurrentPage(1);
                       }}
-                      className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                      className="w-full px-4 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors font-medium"
                     >
                       Clear Filters
                     </button>
@@ -182,13 +182,20 @@ const Blogs: React.FC = () => {
             )}
             
             {/* Search Results Info */}
-            {search && (
-              <div className="text-sm text-gray-600">
+            {search && search.length >= 3 && (
+              <div className="text-sm text-gray-600 bg-white px-4 py-2 rounded-lg border border-gray-200">
                 {blogs.length > 0 ? (
                   `Found ${blogs.length} result${blogs.length !== 1 ? 's' : ''} for "${search}"`
                 ) : (
                   `No results found for "${search}"`
                 )}
+              </div>
+            )}
+            
+            {/* Search Hint */}
+            {search && search.length > 0 && search.length < 3 && (
+              <div className="text-sm text-gray-500 bg-yellow-50 px-4 py-2 rounded-lg border border-yellow-200">
+                Type {3 - search.length} more character{3 - search.length !== 1 ? 's' : ''} to start searching...
               </div>
             )}
           </div>
