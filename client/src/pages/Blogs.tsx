@@ -23,6 +23,12 @@ const Blogs: React.FC = () => {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [category, setCategory] = useState('');
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [searchResults, setSearchResults] = useState<Blog[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const categories = ['Technology', 'Programming', 'Web Development', 'Mobile Development', 'Data Science', 'AI/ML', 'DevOps', 'Design', 'Career', 'Tutorial', 'News', 'Opinion', 'Other'];
 
   const handleLike = async (blogId: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,12 +54,35 @@ const Blogs: React.FC = () => {
 
   useEffect(() => {
     fetchBlogs();
-  }, [currentPage, search]);
+  }, [currentPage, search, category, sortBy]);
+
+  // Real-time search with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (search.length >= 1) {
+        setCurrentPage(1);
+        fetchBlogs();
+      } else if (search.length === 0) {
+        fetchBlogs();
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/blogs?page=${currentPage}&search=${search}&limit=9`);
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: '9',
+        sort: sortBy
+      });
+      
+      if (search) params.append('search', search);
+      if (category) params.append('category', category);
+      
+      const response = await api.get(`/api/blogs?${params}`);
       setBlogs(response.data.blogs);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -85,20 +114,84 @@ const Blogs: React.FC = () => {
           <p className="text-white/80 text-lg">Discover amazing stories and insights from our community</p>
         </div>
 
-        {/* Search */}
-        <div className="max-w-2xl mx-auto mb-12">
-          <form onSubmit={handleSearch} className="flex gap-4">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search blogs..."
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <button type="submit" className="btn-primary px-8">
-              Search
-            </button>
-          </form>
+        {/* Search and Filters */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="flex flex-col gap-4">
+            {/* Search Bar */}
+            <div className="flex gap-4">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search blogs... (start typing for instant results)"
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <button 
+                onClick={() => setShowFilters(!showFilters)}
+                className="px-6 py-3 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
+              >
+                🔍 Filters
+              </button>
+            </div>
+            
+            {/* Filters */}
+            {showFilters && (
+              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="">All Categories</option>
+                      {categories.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="createdAt">Latest</option>
+                      <option value="views">Most Viewed</option>
+                      <option value="likes">Most Liked</option>
+                      <option value="title">Alphabetical</option>
+                    </select>
+                  </div>
+                  <div className="flex items-end">
+                    <button
+                      onClick={() => {
+                        setSearch('');
+                        setCategory('');
+                        setSortBy('createdAt');
+                        setCurrentPage(1);
+                      }}
+                      className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Search Results Info */}
+            {search && (
+              <div className="text-sm text-gray-600">
+                {blogs.length > 0 ? (
+                  `Found ${blogs.length} result${blogs.length !== 1 ? 's' : ''} for "${search}"`
+                ) : (
+                  `No results found for "${search}"`
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Blogs Grid */}

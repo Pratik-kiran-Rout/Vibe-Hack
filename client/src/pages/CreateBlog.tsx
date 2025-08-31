@@ -48,19 +48,37 @@ const CreateBlog: React.FC = () => {
 
   const loadBlog = async () => {
     try {
-      const response = await api.get(`/api/blogs/${id}`);
-      const blog = response.data;
-      setTitle(blog.title);
-      setExcerpt(blog.excerpt);
-      setContent(blog.content);
-      setTags(blog.tags.join(', '));
-      setCategory(blog.category);
-      setFeaturedImage(blog.featuredImage);
-      setSeriesName(blog.series?.name || '');
-      setSeriesPart(blog.series?.part || 1);
-      setIsDraft(blog.isDraft);
-    } catch (error) {
-      setError('Failed to load blog');
+      // Try to get from user's blogs first (includes drafts)
+      const response = await api.get(`/api/blogs/user/my-blogs`);
+      const blog = response.data.find(b => b._id === id);
+      
+      if (!blog) {
+        // If not found in user blogs, try direct API
+        const directResponse = await api.get(`/api/blogs/${id}`);
+        const directBlog = directResponse.data;
+        setTitle(directBlog.title || '');
+        setExcerpt(directBlog.excerpt || '');
+        setContent(directBlog.content || '');
+        setTags(directBlog.tags ? directBlog.tags.join(', ') : '');
+        setCategory(directBlog.category || 'Other');
+        setFeaturedImage(directBlog.featuredImage || '');
+        setSeriesName(directBlog.series?.name || '');
+        setSeriesPart(directBlog.series?.part || 1);
+        setIsDraft(directBlog.isDraft !== false);
+      } else {
+        setTitle(blog.title || '');
+        setExcerpt(blog.excerpt || '');
+        setContent(blog.content || '');
+        setTags(blog.tags ? blog.tags.join(', ') : '');
+        setCategory(blog.category || 'Other');
+        setFeaturedImage(blog.featuredImage || '');
+        setSeriesName(blog.series?.name || '');
+        setSeriesPart(blog.series?.part || 1);
+        setIsDraft(blog.isDraft !== false);
+      }
+    } catch (error: any) {
+      console.error('Load blog error:', error);
+      setError(error.response?.data?.message || 'Failed to load blog');
     }
   };
 
@@ -101,6 +119,18 @@ const CreateBlog: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB');
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('image', file);
 
@@ -108,10 +138,23 @@ const CreateBlog: React.FC = () => {
       const response = await api.post('/api/upload/image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setFeaturedImage(response.data.imageUrl || response.data.url);
+      
+      const imageUrl = response.data.imageUrl || response.data.url || response.data.path;
+      if (imageUrl) {
+        setFeaturedImage(imageUrl);
+        setError(''); // Clear any previous errors
+      } else {
+        throw new Error('No image URL returned from server');
+      }
     } catch (error: any) {
       console.error('Upload error:', error);
-      setError(error.response?.data?.message || 'Failed to upload image');
+      // Fallback: create a data URL for preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFeaturedImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+      setError('Image uploaded locally (server upload failed)');
     }
   };
 
@@ -120,30 +163,58 @@ const CreateBlog: React.FC = () => {
     setError('');
     setLoading(true);
 
+    // Validation
+    if (!title.trim()) {
+      setError('Title is required');
+      setLoading(false);
+      return;
+    }
+
+    if (publish && !content.trim()) {
+      setError('Content is required for publishing');
+      setLoading(false);
+      return;
+    }
+
+    if (publish && !excerpt.trim()) {
+      setError('Excerpt is required for publishing');
+      setLoading(false);
+      return;
+    }
+
     try {
       const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
       
       const blogData = {
-        title,
-        excerpt,
-        content,
+        title: title.trim(),
+        excerpt: excerpt.trim(),
+        content: content.trim(),
         tags: tagsArray,
         category,
         featuredImage,
-        series: seriesName ? { name: seriesName, part: seriesPart } : undefined,
-        isDraft: !publish,
-        status: publish ? 'approved' : 'draft'
+        series: seriesName ? { name: seriesName, part: seriesPart } : { name: '', part: 0 },
+        isDraft: !publish
       };
 
+      let response;
       if (id) {
-        await api.put(`/api/blogs/${id}`, blogData);
+        response = await api.put(`/api/blogs/${id}`, blogData);
       } else {
-        await api.post('/api/blogs', blogData);
+        response = await api.post('/api/blogs', blogData);
       }
 
-      navigate('/profile');
+      if (response.data) {
+        navigate('/profile');
+      } else {
+        throw new Error('No response data received');
+      }
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to save blog');
+      console.error('Submit error:', error);
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Failed to save blog';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

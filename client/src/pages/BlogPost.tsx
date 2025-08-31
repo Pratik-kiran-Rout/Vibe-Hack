@@ -46,6 +46,26 @@ const BlogPost: React.FC = () => {
   const [error, setError] = useState('');
   const [readStartTime, setReadStartTime] = useState<number>(Date.now());
 
+  const handleLike = async () => {
+    if (!blog || !user) {
+      alert('Please login to like this blog');
+      return;
+    }
+
+    try {
+      const response = await api.post(`/api/blogs/${blog._id}/like`);
+      setBlog(prev => prev ? {
+        ...prev,
+        likes: Array(response.data.likes).fill({ user: user.id })
+      } : null);
+    } catch (error: any) {
+      console.error('Error liking blog:', error);
+      if (error.response?.status === 401) {
+        alert('Please login to like blogs');
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -158,7 +178,12 @@ const BlogPost: React.FC = () => {
               </div>
               <div className="flex items-center gap-4">
                 <span>👁 {blog.views}</span>
-                <span>❤️ {blog.likes.length}</span>
+                <button 
+                  onClick={handleLike}
+                  className="flex items-center gap-1 hover:text-red-500 transition-colors cursor-pointer"
+                >
+                  ❤️ {blog.likes.length}
+                </button>
                 <span>💬 {blog.comments.length}</span>
                 <ReadingListButton blogId={blog._id} />
                 <OfflineIndicator 
