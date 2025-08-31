@@ -44,7 +44,7 @@ function App() {
   return (
     <AuthProvider>
       <SocketProvider>
-        <Router>
+        <Router basename="/">
           <div className="App">
             <ParticleBackground />
             <Header />

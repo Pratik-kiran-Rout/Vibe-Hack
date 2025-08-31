@@ -101,16 +101,21 @@ router.get('/:id', async (req, res) => {
 
 // Create blog
 router.post('/', auth, blogLimiter, [
-  body('title').isLength({ min: 5, max: 200 }).trim().escape(),
-  body('content').optional().isLength({ min: 1 }),
-  body('excerpt').optional().isLength({ min: 10, max: 300 }).trim().escape(),
+  body('title').isLength({ min: 1, max: 200 }).trim(),
+  body('content').optional(),
+  body('excerpt').optional().isLength({ max: 300 }).trim(),
   body('tags').optional().isArray(),
   body('category').optional().isIn(['Technology', 'Programming', 'Web Development', 'Mobile Development', 'Data Science', 'AI/ML', 'DevOps', 'Design', 'Career', 'Tutorial', 'News', 'Opinion', 'Other'])
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      console.error('Validation errors:', errors.array());
+      return res.status(400).json({ 
+        message: 'Validation failed', 
+        errors: errors.array(),
+        receivedData: req.body
+      });
     }
 
     const { title, content, excerpt, tags, featuredImage, category, isDraft, series } = req.body;

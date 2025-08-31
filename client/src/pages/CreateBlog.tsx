@@ -29,12 +29,12 @@ const CreateBlog: React.FC = () => {
     'News', 'Opinion', 'Other'
   ];
 
-  // Auto-save functionality
+  // Auto-save functionality (less frequent)
   useEffect(() => {
-    if (title || content) {
+    if (title && title.length >= 5) {
       const timer = setTimeout(() => {
         saveDraft();
-      }, 3000);
+      }, 10000); // Increased to 10 seconds
       return () => clearTimeout(timer);
     }
   }, [title, content, excerpt]);
@@ -83,21 +83,23 @@ const CreateBlog: React.FC = () => {
   };
 
   const saveDraft = async () => {
-    if (!title && !content) return;
+    // Only auto-save if we have meaningful content
+    if (!title || title.length < 5) return;
     
     setAutoSaving(true);
     try {
       const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
       
       const blogData = {
-        title,
-        excerpt,
-        content,
+        title: title.trim(),
+        excerpt: excerpt.trim() || title.substring(0, 100) + '...', // Auto-generate excerpt if empty
+        content: content.trim() || 'Draft content...', // Provide default content
         tags: tagsArray,
         category,
         featuredImage,
-        series: seriesName ? { name: seriesName, part: seriesPart } : undefined,
-        isDraft: true
+        series: seriesName ? { name: seriesName, part: seriesPart } : { name: '', part: 0 },
+        isDraft: true,
+        status: 'draft'
       };
 
       if (id) {
@@ -108,8 +110,8 @@ const CreateBlog: React.FC = () => {
           window.history.replaceState(null, '', `/create/${response.data._id}`);
         }
       }
-    } catch (error) {
-      console.error('Auto-save failed:', error);
+    } catch (error: any) {
+      console.error('Auto-save failed:', error.response?.data || error.message);
     } finally {
       setAutoSaving(false);
     }
@@ -273,18 +275,13 @@ const CreateBlog: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Featured Image
+                Featured Image (Coming Soon)
               </label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
-                />
-                {featuredImage && (
-                  <img src={featuredImage} alt="Featured" className="w-20 h-20 object-cover rounded" />
-                )}
+              <div className="bg-gray-100 p-4 rounded-lg border-2 border-dashed border-gray-300">
+                <p className="text-gray-500 text-center">
+                  📷 Image upload feature is temporarily disabled.<br/>
+                  Focus on creating amazing content!
+                </p>
               </div>
             </div>
 

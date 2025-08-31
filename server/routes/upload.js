@@ -33,17 +33,32 @@ const upload = multer({
 });
 
 // Upload image endpoint
-router.post('/image', auth, upload.single('image'), (req, res) => {
-  try {
+router.post('/image', auth, (req, res) => {
+  const uploadSingle = upload.single('image');
+  
+  uploadSingle(req, res, (err) => {
+    if (err) {
+      console.error('Upload error:', err);
+      return res.status(400).json({ message: err.message || 'Upload failed' });
+    }
+    
     if (!req.file) {
       return res.status(400).json({ message: 'No image file provided' });
     }
 
     const imageUrl = `/uploads/${req.file.filename}`;
-    res.json({ imageUrl });
-  } catch (error) {
-    res.status(500).json({ message: 'Upload failed', error: error.message });
-  }
+    console.log('Image uploaded successfully:', imageUrl);
+    res.json({ 
+      imageUrl,
+      url: imageUrl, // Alternative field name
+      path: imageUrl // Another alternative
+    });
+  });
+});
+
+// Fallback route for testing
+router.post('/test', auth, (req, res) => {
+  res.json({ message: 'Upload route is working', timestamp: new Date() });
 });
 
 module.exports = router;
