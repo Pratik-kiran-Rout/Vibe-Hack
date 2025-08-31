@@ -114,6 +114,91 @@ router.get('/create-admin', async (req, res) => {
   }
 });
 
+// Simple seed route that works immediately
+router.get('/quick-seed', async (req, res) => {
+  try {
+    // Create a simple user first
+    let user = await User.findOne({ email: 'demo@devnote.com' });
+    if (!user) {
+      user = new User({
+        username: 'demo_user',
+        email: 'demo@devnote.com',
+        password: 'password123',
+        role: 'user',
+        bio: 'Demo user for sample content'
+      });
+      await user.save();
+    }
+
+    // Create simple blogs
+    const blogs = [
+      {
+        title: "Welcome to DevNote!",
+        content: "# Welcome to DevNote\n\nThis is your first blog post on DevNote! Start writing amazing content and share your knowledge with the developer community.\n\n## Getting Started\n\n1. Click on 'Write Blog' to create your first post\n2. Use markdown to format your content\n3. Add tags to help others discover your content\n\nHappy blogging!",
+        excerpt: "Welcome to DevNote! Your journey as a developer blogger starts here.",
+        author: user._id,
+        category: "Other",
+        tags: ["welcome", "getting-started"],
+        status: "approved",
+        readTime: 3,
+        views: 150,
+        shares: 5
+      },
+      {
+        title: "JavaScript Tips Every Developer Should Know",
+        content: "# JavaScript Tips\n\nHere are some essential JavaScript tips that will make you a better developer:\n\n## 1. Use const and let\n\n```javascript\nconst name = 'John';\nlet age = 25;\n```\n\n## 2. Arrow Functions\n\n```javascript\nconst add = (a, b) => a + b;\n```\n\n## 3. Template Literals\n\n```javascript\nconst message = \`Hello, \${name}!\`;\n```\n\nThese simple tips will improve your JavaScript code quality!",
+        excerpt: "Essential JavaScript tips that every developer should know to write better code.",
+        author: user._id,
+        category: "Programming",
+        tags: ["javascript", "tips", "programming"],
+        status: "approved",
+        readTime: 5,
+        views: 320,
+        shares: 12
+      },
+      {
+        title: "Building Your First React App",
+        content: "# React Tutorial\n\nLet's build your first React application step by step.\n\n## Setup\n\n```bash\nnpx create-react-app my-app\ncd my-app\nnpm start\n```\n\n## Your First Component\n\n```jsx\nfunction Welcome() {\n  return <h1>Hello, React!</h1>;\n}\n```\n\n## Adding State\n\n```jsx\nconst [count, setCount] = useState(0);\n```\n\nReact makes building interactive UIs simple and fun!",
+        excerpt: "Learn how to build your first React application with this step-by-step tutorial.",
+        author: user._id,
+        category: "Web Development",
+        tags: ["react", "tutorial", "frontend"],
+        status: "approved",
+        readTime: 8,
+        views: 450,
+        shares: 18
+      }
+    ];
+
+    // Insert blogs
+    let created = 0;
+    for (const blogData of blogs) {
+      const existing = await Blog.findOne({ title: blogData.title });
+      if (!existing) {
+        const blog = new Blog(blogData);
+        await blog.save();
+        created++;
+      }
+    }
+
+    const totalBlogs = await Blog.countDocuments();
+    
+    res.json({
+      success: true,
+      message: 'Quick seed completed!',
+      created: created,
+      total: totalBlogs,
+      user: user.username
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error in quick seed', 
+      error: error.message 
+    });
+  }
+});
+
 // Seed database with sample blogs
 router.get('/seed-blogs', async (req, res) => {
   try {
