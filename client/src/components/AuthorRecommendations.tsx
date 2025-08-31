@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import FollowButton from './FollowButton';
 import { useAuth } from '../context/AuthContext';
 
@@ -25,7 +25,7 @@ const AuthorRecommendations: React.FC = () => {
 
   const fetchRecommendedAuthors = async () => {
     try {
-      const response = await axios.get('/api/search/authors/recommended');
+      const response = await api.get('/api/search/authors/recommended');
       setAuthors(response.data);
     } catch (error) {
       console.error('Error fetching recommended authors:', error);

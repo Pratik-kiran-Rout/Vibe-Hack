@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface SavedBlog {
@@ -30,7 +30,7 @@ const ReadingList: React.FC = () => {
 
   const fetchReadingList = async () => {
     try {
-      const response = await axios.get('/api/social/reading-list');
+      const response = await api.get('/api/social/reading-list');
       setSavedBlogs(response.data);
     } catch (error) {
       console.error('Error fetching reading list:', error);
@@ -41,7 +41,7 @@ const ReadingList: React.FC = () => {
 
   const removeBlog = async (blogId: string) => {
     try {
-      await axios.post(`/api/social/reading-list/${blogId}`);
+      await api.post(`/api/social/reading-list/${blogId}`);
       setSavedBlogs(prev => prev.filter(blog => blog._id !== blogId));
     } catch (error) {
       console.error('Error removing blog:', error);

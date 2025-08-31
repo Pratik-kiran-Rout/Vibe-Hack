@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface ReviewRequest {
@@ -35,7 +35,7 @@ const PeerReview: React.FC = () => {
 
   const fetchReviewRequests = async () => {
     try {
-      const response = await axios.get('/api/community/reviews/requests');
+      const response = await api.get('/api/community/reviews/requests');
       setReviewRequests(response.data);
     } catch (error) {
       console.error('Error fetching review requests:', error);
@@ -46,7 +46,7 @@ const PeerReview: React.FC = () => {
 
   const fetchUserBlogs = async () => {
     try {
-      const response = await axios.get('/api/blogs/user/my-blogs');
+      const response = await api.get('/api/blogs/user/my-blogs');
       setUserBlogs(response.data.filter((blog: any) => blog.status === 'approved'));
     } catch (error) {
       console.error('Error fetching user blogs:', error);
@@ -57,7 +57,7 @@ const PeerReview: React.FC = () => {
     if (!selectedBlog) return;
 
     try {
-      await axios.post('/api/community/reviews/request', {
+      await api.post('/api/community/reviews/request', {
         blogId: selectedBlog
       });
       setSelectedBlog('');
@@ -70,7 +70,7 @@ const PeerReview: React.FC = () => {
 
   const handleAcceptReview = async (reviewId: string) => {
     try {
-      await axios.post(`/api/community/reviews/${reviewId}/accept`);
+      await api.post(`/api/community/reviews/${reviewId}/accept`);
       fetchReviewRequests();
       alert('Review accepted! You can now provide feedback.');
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface TipButtonProps {
@@ -21,7 +21,7 @@ const TipButton: React.FC<TipButtonProps> = ({ blogId, authorName }) => {
 
     setLoading(true);
     try {
-      await axios.post(`/api/monetization/tip/${blogId}`, {
+      await api.post(`/api/monetization/tip/${blogId}`, {
         amount,
         message
       });

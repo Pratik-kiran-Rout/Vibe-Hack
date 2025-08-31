@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface HistoryItem {
@@ -32,7 +32,7 @@ const ReadingHistory: React.FC = () => {
 
   const fetchReadingHistory = async () => {
     try {
-      const response = await axios.get('/api/search/reading-history');
+      const response = await api.get('/api/search/reading-history');
       setHistory(response.data);
     } catch (error) {
       console.error('Error fetching reading history:', error);

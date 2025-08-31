@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface Webhook {
   _id: string;
@@ -32,7 +32,7 @@ const WebhookManager: React.FC = () => {
 
   const fetchWebhooks = async () => {
     try {
-      const response = await axios.get('/api/webhooks');
+      const response = await api.get('/api/webhooks');
       setWebhooks(response.data);
     } catch (error) {
       console.error('Failed to fetch webhooks:', error);
@@ -44,7 +44,7 @@ const WebhookManager: React.FC = () => {
     
     setLoading(true);
     try {
-      await axios.post('/api/webhooks', newWebhook);
+      await api.post('/api/webhooks', newWebhook);
       setNewWebhook({ url: '', events: [] });
       fetchWebhooks();
     } catch (error) {
@@ -56,7 +56,7 @@ const WebhookManager: React.FC = () => {
 
   const toggleWebhook = async (id: string, active: boolean) => {
     try {
-      await axios.patch(`/api/webhooks/${id}`, { active });
+      await api.patch(`/api/webhooks/${id}`, { active });
       fetchWebhooks();
     } catch (error) {
       alert('Failed to update webhook');
@@ -67,7 +67,7 @@ const WebhookManager: React.FC = () => {
     if (!confirm('Delete this webhook?')) return;
     
     try {
-      await axios.delete(`/api/webhooks/${id}`);
+      await api.delete(`/api/webhooks/${id}`);
       fetchWebhooks();
     } catch (error) {
       alert('Failed to delete webhook');

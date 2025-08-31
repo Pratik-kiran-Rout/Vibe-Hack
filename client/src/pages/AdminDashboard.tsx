@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import AdminAnalytics from '../components/AdminAnalytics';
 import UserManagement from '../components/UserManagement';
 import ContentReports from '../components/ContentReports';
@@ -43,8 +43,8 @@ const AdminDashboard: React.FC = () => {
   const fetchData = async () => {
     try {
       const [blogsResponse, statsResponse] = await Promise.all([
-        axios.get(`/api/admin/blogs?status=${filter}`),
-        axios.get('/api/admin/stats')
+        api.get(`/api/admin/blogs?status=${filter}`),
+        api.get('/api/admin/stats')
       ]);
       
       setBlogs(blogsResponse.data.blogs);
@@ -58,7 +58,7 @@ const AdminDashboard: React.FC = () => {
 
   const updateBlogStatus = async (blogId: string, status: string) => {
     try {
-      await axios.put(`/api/admin/blogs/${blogId}/status`, { status });
+      await api.put(`/api/admin/blogs/${blogId}/status`, { status });
       fetchData(); // Refresh data
     } catch (error) {
       console.error('Error updating blog status:', error);
@@ -68,7 +68,7 @@ const AdminDashboard: React.FC = () => {
   const deleteBlog = async (blogId: string) => {
     if (window.confirm('Are you sure you want to delete this blog?')) {
       try {
-        await axios.delete(`/api/admin/blogs/${blogId}`);
+        await api.delete(`/api/admin/blogs/${blogId}`);
         fetchData(); // Refresh data
       } catch (error) {
         console.error('Error deleting blog:', error);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const ExportTools: React.FC = () => {
   const [exporting, setExporting] = useState(false);
@@ -7,7 +7,7 @@ const ExportTools: React.FC = () => {
   const handleExport = async (type: 'json' | 'csv' | 'rss') => {
     setExporting(true);
     try {
-      const response = await axios.get(`/api/export/${type}`, {
+      const response = await api.get(`/api/export/${type}`, {
         responseType: 'blob'
       });
       
@@ -27,7 +27,7 @@ const ExportTools: React.FC = () => {
 
   const generateRSSFeed = async () => {
     try {
-      const response = await axios.get('/api/rss/generate');
+      const response = await api.get('/api/rss/generate');
       const rssUrl = `${window.location.origin}/api/rss/feed.xml`;
       navigator.clipboard.writeText(rssUrl);
       alert(`RSS feed generated! URL copied to clipboard: ${rssUrl}`);

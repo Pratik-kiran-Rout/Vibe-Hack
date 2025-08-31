@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface AdminAnalyticsData {
   overview: {
@@ -37,7 +37,7 @@ const AdminAnalytics: React.FC = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await axios.get('/api/analytics/admin');
+      const response = await api.get('/api/analytics/admin');
       setData(response.data);
     } catch (error) {
       console.error('Error fetching admin analytics:', error);

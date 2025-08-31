@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface Report {
   user: {
@@ -33,7 +33,7 @@ const ContentReports: React.FC = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get('/api/admin-tools/reports');
+      const response = await api.get('/api/admin-tools/reports');
       setReportedBlogs(response.data);
     } catch (error) {
       console.error('Error fetching reports:', error);
@@ -44,7 +44,7 @@ const ContentReports: React.FC = () => {
 
   const handleBlogAction = async (blogId: string, action: string) => {
     try {
-      await axios.put(`/api/admin/blogs/${blogId}/status`, { status: action });
+      await api.put(`/api/admin/blogs/${blogId}/status`, { status: action });
       fetchReports(); // Refresh the list
     } catch (error) {
       console.error('Error updating blog status:', error);

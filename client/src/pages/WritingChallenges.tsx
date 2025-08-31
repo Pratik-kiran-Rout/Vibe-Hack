@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface Challenge {
@@ -39,7 +39,7 @@ const WritingChallenges: React.FC = () => {
 
   const fetchChallenges = async () => {
     try {
-      const response = await axios.get('/api/community/challenges');
+      const response = await api.get('/api/community/challenges');
       setChallenges(response.data);
     } catch (error) {
       console.error('Error fetching challenges:', error);
@@ -50,7 +50,7 @@ const WritingChallenges: React.FC = () => {
 
   const fetchUserBlogs = async () => {
     try {
-      const response = await axios.get('/api/blogs/user/my-blogs');
+      const response = await api.get('/api/blogs/user/my-blogs');
       setUserBlogs(response.data.filter((blog: any) => blog.status === 'approved'));
     } catch (error) {
       console.error('Error fetching user blogs:', error);
@@ -61,7 +61,7 @@ const WritingChallenges: React.FC = () => {
     if (!selectedBlog) return;
 
     try {
-      await axios.post(`/api/community/challenges/${challengeId}/participate`, {
+      await api.post(`/api/community/challenges/${challengeId}/participate`, {
         blogId: selectedBlog
       });
       fetchChallenges();

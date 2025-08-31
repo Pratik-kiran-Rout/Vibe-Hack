@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface DashboardData {
   writingStats: {
@@ -37,7 +37,7 @@ const AnalyticsDashboard: React.FC = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await axios.get('/api/analytics/dashboard');
+      const response = await api.get('/api/analytics/dashboard');
       setData(response.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);

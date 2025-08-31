@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface BulkActionsProps {
   selectedItems: string[];
@@ -32,7 +32,7 @@ const BulkActions: React.FC<BulkActionsProps> = ({
         ? { blogIds: selectedItems, action }
         : { userIds: selectedItems, action };
 
-      await axios.post(endpoint, payload);
+      await api.post(endpoint, payload);
       onActionComplete();
       onClearSelection();
     } catch (error) {

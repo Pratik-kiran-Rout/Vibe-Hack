@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface ReadingListButtonProps {
@@ -22,7 +22,7 @@ const ReadingListButton: React.FC<ReadingListButtonProps> = ({
 
     setLoading(true);
     try {
-      const response = await axios.post(`/api/social/reading-list/${blogId}`);
+      const response = await api.post(`/api/social/reading-list/${blogId}`);
       setSaved(response.data.saved);
       
       if (onSaveChange) {

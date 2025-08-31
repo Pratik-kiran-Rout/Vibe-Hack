@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../utils/api';
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
 import EarningsDashboard from '../components/EarningsDashboard';
 import ImportTools from '../components/ImportTools';
@@ -31,8 +31,8 @@ const Profile: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const [blogsResponse, draftsResponse] = await Promise.all([
-          axios.get('/api/blogs/user/my-blogs'),
-          axios.get('/api/blogs/user/drafts')
+          api.get('/api/blogs/user/my-blogs'),
+          api.get('/api/blogs/user/drafts')
         ]);
         setBlogs(blogsResponse.data.filter((blog: Blog) => blog.status !== 'draft'));
         setDrafts(draftsResponse.data);

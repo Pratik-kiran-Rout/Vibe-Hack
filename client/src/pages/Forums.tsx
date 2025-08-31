@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface Forum {
@@ -42,7 +42,7 @@ const Forums: React.FC = () => {
   const fetchForums = async () => {
     try {
       const params = selectedCategory ? `?category=${selectedCategory}` : '';
-      const response = await axios.get(`/api/community/forums${params}`);
+      const response = await api.get(`/api/community/forums${params}`);
       setForums(response.data);
     } catch (error) {
       console.error('Error fetching forums:', error);
@@ -61,7 +61,7 @@ const Forums: React.FC = () => {
         tags: newForum.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       };
       
-      await axios.post('/api/community/forums', forumData);
+      await api.post('/api/community/forums', forumData);
       setShowCreateForm(false);
       setNewForum({ title: '', description: '', category: 'General', tags: '' });
       fetchForums();

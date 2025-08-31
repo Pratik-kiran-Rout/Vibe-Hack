@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface ReportButtonProps {
@@ -27,7 +27,7 @@ const ReportButton: React.FC<ReportButtonProps> = ({ blogId }) => {
 
     setLoading(true);
     try {
-      await axios.post(`/api/admin-tools/blogs/${blogId}/report`, {
+      await api.post(`/api/admin-tools/blogs/${blogId}/report`, {
         reason,
         description
       });

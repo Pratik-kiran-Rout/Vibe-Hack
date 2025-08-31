@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const ImportTools: React.FC = () => {
   const [importing, setImporting] = useState(false);
@@ -11,7 +11,7 @@ const ImportTools: React.FC = () => {
     
     setImporting(true);
     try {
-      await axios.post('/api/blogs/import', {
+      await api.post('/api/blogs/import', {
         url: importUrl,
         type: importType
       });

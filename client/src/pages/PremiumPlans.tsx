@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface Plan {
@@ -26,7 +26,7 @@ const PremiumPlans: React.FC = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get('/api/monetization/plans');
+      const response = await api.get('/api/monetization/plans');
       setPlans(response.data);
     } catch (error) {
       console.error('Error fetching plans:', error);
@@ -40,7 +40,7 @@ const PremiumPlans: React.FC = () => {
 
     setSubscribing(planKey);
     try {
-      await axios.post('/api/monetization/subscribe', { plan: planKey });
+      await api.post('/api/monetization/subscribe', { plan: planKey });
       alert('Subscription activated successfully!');
       window.location.reload();
     } catch (error) {

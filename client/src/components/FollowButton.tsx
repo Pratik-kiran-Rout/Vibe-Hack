@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
 interface FollowButtonProps {
@@ -27,7 +27,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
     setLoading(true);
     try {
-      const response = await axios.post(`/api/social/follow/${userId}`);
+      const response = await api.post(`/api/social/follow/${userId}`);
       setFollowing(response.data.following);
       setFollowersCount(response.data.followersCount);
       

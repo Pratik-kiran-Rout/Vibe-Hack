@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface Tag {
   name: string;
@@ -20,7 +20,7 @@ const PopularTags: React.FC<PopularTagsProps> = ({ onTagClick }) => {
 
   const fetchPopularTags = async () => {
     try {
-      const response = await axios.get('/api/search/tags/popular');
+      const response = await api.get('/api/search/tags/popular');
       setTags(response.data);
     } catch (error) {
       console.error('Error fetching popular tags:', error);

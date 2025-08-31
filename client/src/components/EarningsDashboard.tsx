@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface Earnings {
   totalEarnings: number;
@@ -22,7 +22,7 @@ const EarningsDashboard: React.FC = () => {
 
   const fetchEarnings = async () => {
     try {
-      const response = await axios.get('/api/monetization/earnings');
+      const response = await api.get('/api/monetization/earnings');
       setEarnings(response.data);
     } catch (error) {
       console.error('Error fetching earnings:', error);

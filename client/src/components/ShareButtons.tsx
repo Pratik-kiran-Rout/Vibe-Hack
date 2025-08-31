@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface ShareButtonsProps {
   blogId: string;
@@ -12,7 +12,7 @@ interface ShareButtonsProps {
 const ShareButtons: React.FC<ShareButtonsProps> = ({ blogId, title, url, shares, onShare }) => {
   const handleShare = async (platform: string) => {
     try {
-      const response = await axios.post(`/api/social/share/${blogId}`);
+      const response = await api.post(`/api/social/share/${blogId}`);
       onShare(response.data.shares);
     } catch (error) {
       console.error('Share tracking failed:', error);

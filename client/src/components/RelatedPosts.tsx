@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface RelatedBlog {
   _id: string;
@@ -29,7 +29,7 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ blogId }) => {
 
   const fetchRelatedPosts = async () => {
     try {
-      const response = await axios.get(`/api/search/related/${blogId}`);
+      const response = await api.get(`/api/search/related/${blogId}`);
       setRelatedPosts(response.data);
     } catch (error) {
       console.error('Error fetching related posts:', error);

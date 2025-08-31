@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ReactMarkdown from 'react-markdown';
@@ -48,7 +48,7 @@ const CreateBlog: React.FC = () => {
 
   const loadBlog = async () => {
     try {
-      const response = await axios.get(`/api/blogs/${id}`);
+      const response = await api.get(`/api/blogs/${id}`);
       const blog = response.data;
       setTitle(blog.title);
       setExcerpt(blog.excerpt);
@@ -83,9 +83,9 @@ const CreateBlog: React.FC = () => {
       };
 
       if (id) {
-        await axios.put(`/api/blogs/${id}`, blogData);
+        await api.put(`/api/blogs/${id}`, blogData);
       } else {
-        const response = await axios.post('/api/blogs', blogData);
+        const response = await api.post('/api/blogs', blogData);
         if (!id) {
           window.history.replaceState(null, '', `/create/${response.data._id}`);
         }
@@ -105,7 +105,7 @@ const CreateBlog: React.FC = () => {
     formData.append('image', file);
 
     try {
-      const response = await axios.post('/api/upload/image', formData, {
+      const response = await api.post('/api/upload/image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFeaturedImage(response.data.imageUrl);
@@ -134,9 +134,9 @@ const CreateBlog: React.FC = () => {
       };
 
       if (id) {
-        await axios.put(`/api/blogs/${id}`, blogData);
+        await api.put(`/api/blogs/${id}`, blogData);
       } else {
-        await axios.post('/api/blogs', blogData);
+        await api.post('/api/blogs', blogData);
       }
 
       navigate('/profile');

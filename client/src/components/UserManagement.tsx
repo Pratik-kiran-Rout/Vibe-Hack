@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import BulkActions from './BulkActions';
 
 interface User {
@@ -34,7 +34,7 @@ const UserManagement: React.FC = () => {
         role: roleFilter
       });
 
-      const response = await axios.get(`/api/admin-tools/users?${params}`);
+      const response = await api.get(`/api/admin-tools/users?${params}`);
       setUsers(response.data.users);
       setTotalPages(response.data.totalPages);
     } catch (error) {
