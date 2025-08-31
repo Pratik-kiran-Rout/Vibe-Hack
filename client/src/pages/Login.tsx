@@ -105,10 +105,12 @@ const Login: React.FC = () => {
           </p>
         </div>
 
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-500">
-            Demo Admin: admin@devnote.com / password123
-          </p>
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="text-sm font-semibold text-blue-800 mb-2">Demo Credentials</h3>
+          <div className="text-xs text-blue-700 space-y-1">
+            <div><strong>Admin:</strong> admin@devnote.com</div>
+            <div><strong>Password:</strong> password123</div>
+          </div>
         </div>
       </div>
     </div>
